@@ -1,0 +1,28 @@
+{
+  "name": "aws-route-53-global-venue-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Global VenueFinder — Multi-Region Event Space Marketplace (Next.js + Express.js + MongoDB)",
+  "scripts": {
+    "dev:backend": "npm --prefix route-53-backend run start:dev",
+    "dev:frontend": "npm --prefix route-53-frontend run dev",
+    "build:backend": "npm --prefix route-53-backend run build",
+    "build:frontend": "npm --prefix route-53-frontend run build",
+    "check:backend": "npm --prefix route-53-backend run check",
+    "lint:backend": "npm --prefix route-53-backend run lint",
+    "lint:frontend": "npm --prefix route-53-frontend run lint",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "aws",
+    "route-53",
+    "ecs",
+    "multi-region",
+    "express",
+    "nextjs",
+    "marketplace"
+  ],
+  "author": "",
+  "license": "MIT"
+}
