@@ -3,11 +3,7 @@ import bcrypt from 'bcrypt';
 import AppError from '../../errors/AppError';
 import config from '../../config';
 import { createToken, verifyToken } from '../../utils/jwt.utils';
-import {
-  TLoginUser,
-  TRegisterUser,
-  TUserPublic,
-} from './auth.interface';
+import { TLoginUser, TRegisterUser, TUserPublic } from './auth.interface';
 import { IUser, UserModel } from './auth.model';
 import { Types } from 'mongoose';
 
@@ -67,9 +63,7 @@ const registerUser = async (payload: TRegisterUser) => {
     role: payload.role || 'renter',
   });
 
-  const publicUser = toPublicUser(
-    created as IUser & { _id: Types.ObjectId },
-  );
+  const publicUser = toPublicUser(created as IUser & { _id: Types.ObjectId });
   const tokens = generateAuthTokens(publicUser);
 
   return {

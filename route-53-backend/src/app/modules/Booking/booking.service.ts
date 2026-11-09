@@ -122,7 +122,10 @@ const createBooking = async (
   }
 
   const populated = await BookingModel.findById(created._id)
-    .populate('venueId', 'title city country address pricePerHour photos instantBook hostId')
+    .populate(
+      'venueId',
+      'title city country address pricePerHour photos instantBook hostId',
+    )
     .populate('renterId', 'name email');
 
   return populated;

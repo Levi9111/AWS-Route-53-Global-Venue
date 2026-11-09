@@ -89,7 +89,11 @@ const getAllVenues = async (query: TVenueQuery) => {
       ? new Date(String(rawEnd))
       : new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
-    if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && end > start) {
+    if (
+      !Number.isNaN(start.getTime()) &&
+      !Number.isNaN(end.getTime()) &&
+      end > start
+    ) {
       const Booking = mongoose.models.Booking;
       if (Booking) {
         const overlappingVenueIds = await Booking.distinct('venueId', {

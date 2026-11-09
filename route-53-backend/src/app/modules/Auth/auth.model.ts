@@ -66,7 +66,10 @@ userSchema.pre('save', async function () {
     return;
   }
   // Only hash if not already a bcrypt hash
-  if (!this.passwordHash.startsWith('$2b$') && !this.passwordHash.startsWith('$2a$')) {
+  if (
+    !this.passwordHash.startsWith('$2b$') &&
+    !this.passwordHash.startsWith('$2a$')
+  ) {
     this.passwordHash = await bcrypt.hash(
       this.passwordHash,
       config.bcrypt_salt_rounds || 12,

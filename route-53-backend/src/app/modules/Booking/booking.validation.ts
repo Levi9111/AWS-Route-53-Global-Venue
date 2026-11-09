@@ -9,23 +9,25 @@ const createBookingSchema = z.object({
         .min(1, 'venueId is required'),
       startTime: z
         .string({ required_error: 'startTime is required' })
-        .datetime({ offset: true, message: 'startTime must be a valid ISO 8601 date' })
+        .datetime({
+          offset: true,
+          message: 'startTime must be a valid ISO 8601 date',
+        })
         .or(
-          z
-            .string()
-            .refine((val) => !Number.isNaN(Date.parse(val)), {
-              message: 'startTime must be a valid ISO 8601 date string',
-            }),
+          z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+            message: 'startTime must be a valid ISO 8601 date string',
+          }),
         ),
       endTime: z
         .string({ required_error: 'endTime is required' })
-        .datetime({ offset: true, message: 'endTime must be a valid ISO 8601 date' })
+        .datetime({
+          offset: true,
+          message: 'endTime must be a valid ISO 8601 date',
+        })
         .or(
-          z
-            .string()
-            .refine((val) => !Number.isNaN(Date.parse(val)), {
-              message: 'endTime must be a valid ISO 8601 date string',
-            }),
+          z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+            message: 'endTime must be a valid ISO 8601 date string',
+          }),
         ),
     })
     .refine(

@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 
-export type TBookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type TBookingStatus =
+  'pending' | 'confirmed' | 'cancelled' | 'completed';
 
 export interface IBooking {
   _id?: Types.ObjectId;
