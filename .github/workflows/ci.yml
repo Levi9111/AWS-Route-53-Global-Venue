@@ -1,0 +1,59 @@
+name: CI Build & Convention Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-lint-and-build:
+    name: Backend Check & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./route-53-backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: route-53-backend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: CEM Convention & Type Check
+        run: npx cem check
+
+      - name: Compile Backend TypeScript
+        run: npm run build
+
+  frontend-typecheck-and-build:
+    name: Frontend Typecheck & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./route-53-frontend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: route-53-frontend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Verification
+        run: npx tsc --noEmit
