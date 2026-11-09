@@ -58,33 +58,33 @@ function LoginContent() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-lg space-y-6">
+      <div className="w-full max-w-md surface-resting rounded-3xl p-8 space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="font-serif text-3xl font-bold text-zinc-100">
             Welcome Back
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Sign in to manage your bookings or host event spaces
+          <p className="text-xs font-mono text-zinc-400">
+            Sign in to manage your reservations or curate architectural spaces
           </p>
         </div>
 
         {/* Quick Demo Credentials */}
-        <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 text-center">
-            Quick Fill Demo Accounts
+        <div className="p-3.5 rounded-2xl bg-[#09090b]/80 border border-white/[0.04] space-y-2.5">
+          <p className="text-[10px] font-mono uppercase tracking-widest text-[#D9AE54] text-center font-bold">
+            Pre-Seeded Demo Credentials
           </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => fillDemo('renter')}
-              className="py-1.5 px-3 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
+              className="py-2 px-3 rounded-xl text-xs font-mono font-medium border border-white/5 hover:border-[#D9AE54]/40 bg-[#161619] hover:bg-[#1e1e23] text-zinc-200 transition-colors cursor-pointer"
             >
               👤 Demo Renter
             </button>
             <button
               type="button"
               onClick={() => fillDemo('host')}
-              className="py-1.5 px-3 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer"
+              className="py-2 px-3 rounded-xl text-xs font-mono font-medium border border-white/5 hover:border-[#D9AE54]/40 bg-[#161619] hover:bg-[#1e1e23] text-zinc-200 transition-colors cursor-pointer"
             >
               🏛️ Demo Host
             </button>
@@ -92,14 +92,14 @@ function LoginContent() {
         </div>
 
         {errors.form && (
-          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs font-medium text-rose-700 dark:text-rose-300">
+          <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-900/60 text-xs font-medium text-rose-300">
             {errors.form}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
               Email Address
             </label>
             <input
@@ -107,15 +107,15 @@ function LoginContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@company.com"
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full rounded-xl recessed-channel px-3.5 py-2.5 text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-[#D9AE54]"
             />
             {errors.email && (
-              <p className="text-xs text-rose-600 mt-1">{errors.email}</p>
+              <p className="text-xs text-rose-400 mt-1">{errors.email}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
               Password
             </label>
             <input
@@ -123,27 +123,27 @@ function LoginContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full rounded-xl recessed-channel px-3.5 py-2.5 text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-[#D9AE54]"
             />
             {errors.password && (
-              <p className="text-xs text-rose-600 mt-1">{errors.password}</p>
+              <p className="text-xs text-rose-400 mt-1">{errors.password}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold text-sm shadow-sm transition-colors cursor-pointer"
+            className="w-full py-3.5 rounded-xl btn-volumetric-gold font-bold text-xs uppercase tracking-wider cursor-pointer"
           >
-            {submitting ? 'Signing in...' : 'Sign In'}
+            {submitting ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-zinc-400">
           Don&apos;t have an account?{' '}
           <Link
             href="/register"
-            className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="font-semibold text-[#D9AE54] hover:underline"
           >
             Create an account
           </Link>

@@ -82,16 +82,16 @@ function BookVenueContent() {
 
   if (error || !venue) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center space-y-4">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Unable to Load Booking Flow
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-4">
+        <h1 className="font-serif text-3xl font-bold text-zinc-100">
+          Unable to Load Reservation Flow
         </h1>
-        <p className="text-sm text-slate-500">{error}</p>
+        <p className="text-sm text-zinc-400">{error}</p>
         <Link
           href="/"
-          className="inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold"
+          className="inline-block px-5 py-2.5 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider"
         >
-          ← Explore Venues
+          ← Return to Collection
         </Link>
       </div>
     );
@@ -102,27 +102,26 @@ function BookVenueContent() {
       <div>
         <Link
           href={`/venues/${venue._id}`}
-          className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+          className="text-xs font-mono text-zinc-400 hover:text-[#D9AE54] transition-colors"
         >
           ← Back to {venue.title}
         </Link>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
-          Complete Your Venue Reservation
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-zinc-100 mt-2">
+          Reserve Architectural Space
         </h1>
-        <p className="text-sm text-slate-500">
-          Select your UTC date and time window. Availability is verified
-          atomically on the server before confirmation.
+        <p className="text-xs font-mono text-zinc-400 mt-1">
+          Select UTC schedule and interval. Concurrency locks prevent duplicate double-bookings.
         </p>
       </div>
 
       {!user && (
-        <div className="p-4 rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 flex items-center justify-between gap-4">
-          <p className="text-xs sm:text-sm font-medium text-amber-800 dark:text-amber-200">
-            Please sign in or create an account to confirm your reservation.
+        <div className="p-4 rounded-2xl border border-[#D9AE54]/30 bg-[#D9AE54]/10 flex items-center justify-between gap-4">
+          <p className="text-xs sm:text-sm font-medium text-[#D9AE54]">
+            Authentication required: Please sign in or create an account to confirm your reservation.
           </p>
           <Link
             href={`/login?redirect=/book/${venue._id}`}
-            className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shrink-0"
+            className="px-4 py-2 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider shrink-0"
           >
             Sign In
           </Link>
@@ -130,33 +129,33 @@ function BookVenueContent() {
       )}
 
       {bookingError && (
-        <div className="p-4 rounded-2xl border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/50 text-sm font-medium text-rose-700 dark:text-rose-300">
+        <div className="p-4 rounded-2xl border border-rose-900/60 bg-rose-950/40 text-sm font-medium text-rose-300">
           🚨 {bookingError}
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         {/* Left: Venue Summary */}
-        <div className="lg:col-span-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xs">
+        <div className="lg:col-span-2 surface-resting rounded-3xl overflow-hidden p-2">
           {venue.photos?.[0] && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={venue.photos[0]}
               alt={venue.title}
-              className="h-48 w-full object-cover"
+              className="h-48 w-full object-cover rounded-2xl"
             />
           )}
-          <div className="p-5 space-y-3">
-            <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+          <div className="p-4 space-y-3">
+            <span className="text-xs font-mono text-[#D9AE54]">
               📍 {venue.city}, {venue.country}
             </span>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 className="font-serif text-lg font-bold text-zinc-100">
               {venue.title}
             </h2>
-            <p className="text-xs text-slate-500">{venue.address}</p>
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs text-slate-600 dark:text-slate-300">
-              <span>Max Capacity: {venue.capacity} guests</span>
-              <span className="font-bold">
+            <p className="text-xs text-zinc-400 leading-relaxed">{venue.address}</p>
+            <div className="pt-3 border-t border-white/[0.05] flex justify-between text-xs text-zinc-400 font-mono">
+              <span>Capacity: {venue.capacity} guests</span>
+              <span className="font-bold text-[#D9AE54]">
                 {formatCents(venue.pricePerHour)}/hr
               </span>
             </div>

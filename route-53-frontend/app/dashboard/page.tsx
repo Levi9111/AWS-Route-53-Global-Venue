@@ -96,56 +96,56 @@ function RenterDashboardContent() {
   const statusBadge = (status: Booking['status']) => {
     switch (status) {
       case 'confirmed':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800';
+        return 'bg-[#D9AE54]/15 text-[#D9AE54] border-[#D9AE54]/30';
       case 'pending':
-        return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800';
+        return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
       case 'completed':
-        return 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800';
+        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
       case 'cancelled':
-        return 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800';
+        return 'bg-rose-500/15 text-rose-400 border-rose-500/30';
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-zinc-100">
             My Venue Reservations
           </h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-xs font-mono text-zinc-400 mt-1">
             Manage your upcoming event bookings and review completed stays
           </p>
         </div>
         <Link
           href="/"
-          className="self-start px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs"
+          className="self-start px-4 py-2 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider"
         >
           + Explore More Venues
         </Link>
       </div>
 
       {justBooked && (
-        <div className="p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-sm font-medium text-emerald-800 dark:text-emerald-200">
+        <div className="p-4 rounded-2xl border border-[#D9AE54]/40 bg-[#D9AE54]/10 text-sm font-medium text-[#D9AE54]">
           🎉 Reservation confirmed! Your event space slot has been locked in.
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl border border-rose-200 bg-rose-50 text-sm text-rose-700">
+        <div className="p-4 rounded-2xl border border-rose-900/60 bg-rose-950/40 text-sm text-rose-300">
           {error}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
         <button
           type="button"
           onClick={() => setTab('upcoming')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-colors cursor-pointer ${
             tab === 'upcoming'
-              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#D9AE54] text-black shadow-xs'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
           }`}
         >
           Upcoming & Active ({upcomingBookings.length})
@@ -153,10 +153,10 @@ function RenterDashboardContent() {
         <button
           type="button"
           onClick={() => setTab('past')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-colors cursor-pointer ${
             tab === 'past'
-              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#D9AE54] text-black shadow-xs'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
           }`}
         >
           Past & Cancelled ({pastBookings.length})
@@ -164,18 +164,18 @@ function RenterDashboardContent() {
       </div>
 
       {displayed.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-12 text-center space-y-3">
-          <p className="text-base font-bold text-slate-900 dark:text-white">
+        <div className="surface-resting rounded-3xl p-12 text-center space-y-4">
+          <p className="font-serif text-xl font-bold text-zinc-100">
             No {tab} bookings found
           </p>
-          <p className="text-xs text-slate-500">
-            Browse our global catalog to reserve an event space.
+          <p className="text-xs font-mono text-zinc-400">
+            Browse our global architectural catalog to reserve an event space.
           </p>
           <Link
             href="/"
-            className="inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+            className="inline-block px-5 py-2.5 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider"
           >
-            Browse Spaces
+            Browse Collection
           </Link>
         </div>
       ) : (
@@ -188,30 +188,30 @@ function RenterDashboardContent() {
             return (
               <div
                 key={booking._id}
-                className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
+                className="surface-resting p-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <Link
                       href={`/venues/${venueIdStr}`}
-                      className="font-bold text-base text-slate-900 dark:text-white hover:text-indigo-600"
+                      className="font-serif font-bold text-base text-zinc-100 hover:text-[#D9AE54] transition-colors"
                     >
                       {venueObj?.title || 'Event Venue'}
                     </Link>
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase border ${statusBadge(booking.status)}`}
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase border ${statusBadge(booking.status)}`}
                     >
                       {booking.status}
                     </span>
                   </div>
 
                   {venueObj && (
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-zinc-400 font-mono">
                       📍 {venueObj.address}, {venueObj.city}, {venueObj.country}
                     </p>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 dark:text-slate-300 pt-1">
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-300 font-mono pt-1">
                     <span>
                       🗓️{' '}
                       <strong>
@@ -231,7 +231,7 @@ function RenterDashboardContent() {
                       </strong>
                     </span>
                     <span>•</span>
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-[#D9AE54]">
                       Total:{' '}
                       {formatCents(booking.totalPrice, {
                         includeDecimals: true,
@@ -243,7 +243,7 @@ function RenterDashboardContent() {
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <Link
                     href={`/venues/${venueIdStr}`}
-                    className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
+                    className="px-3.5 py-1.5 rounded-xl border border-white/10 text-xs font-mono font-semibold text-zinc-200 hover:bg-white/[0.05] transition-colors"
                   >
                     {booking.status === 'completed'
                       ? '★ Leave Review'
@@ -257,7 +257,7 @@ function RenterDashboardContent() {
                         type="button"
                         disabled={actionId === booking._id}
                         onClick={() => handleMarkCompleted(booking._id)}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:text-indigo-300 text-xs font-semibold cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-xl bg-emerald-950/40 text-emerald-300 border border-emerald-900/40 text-xs font-mono font-semibold cursor-pointer hover:bg-emerald-900/40"
                       >
                         ✓ Mark Completed
                       </button>
@@ -265,7 +265,7 @@ function RenterDashboardContent() {
                         type="button"
                         disabled={actionId === booking._id}
                         onClick={() => handleCancel(booking._id)}
-                        className="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 dark:bg-rose-950/60 dark:text-rose-300 text-xs font-semibold cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-900/40 text-xs font-mono font-semibold cursor-pointer hover:bg-rose-900/40"
                       >
                         Cancel
                       </button>
