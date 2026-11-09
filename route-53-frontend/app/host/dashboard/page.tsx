@@ -113,60 +113,60 @@ export default function HostDashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#D9AE54]">
             Host Operations Portal
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-zinc-100 mt-1">
             Venue & Booking Management
           </h1>
         </div>
         <Link
           href="/host/venues/new"
-          className="self-start px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm"
+          className="self-start px-5 py-2.5 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider"
         >
-          + List New Event Space
+          + List New Architectural Space
         </Link>
       </div>
 
       {error && (
-        <div className="p-4 rounded-2xl border border-rose-200 bg-rose-50 text-sm text-rose-700">
+        <div className="p-4 rounded-2xl border border-rose-900/60 bg-rose-950/40 text-sm text-rose-300">
           {error}
         </div>
       )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Listed Venues
+        <div className="surface-resting p-5 rounded-3xl">
+          <p className="text-[11px] font-mono font-semibold uppercase text-zinc-400">
+            Curated Spaces
           </p>
-          <p className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+          <p className="font-serif text-3xl font-bold text-zinc-100 mt-1">
             {venues.length}
           </p>
         </div>
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Total Bookings
+        <div className="surface-resting p-5 rounded-3xl">
+          <p className="text-[11px] font-mono font-semibold uppercase text-zinc-400">
+            Total Inquiries
           </p>
-          <p className="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+          <p className="font-serif text-3xl font-bold text-zinc-100 mt-1">
             {bookings.length}
           </p>
         </div>
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase text-slate-500">
-            Confirmed / Completed
+        <div className="surface-resting p-5 rounded-3xl">
+          <p className="text-[11px] font-mono font-semibold uppercase text-zinc-400">
+            Confirmed Stays
           </p>
-          <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
+          <p className="font-serif text-3xl font-bold text-emerald-400 mt-1">
             {activeBookings.length}
           </p>
         </div>
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-          <p className="text-xs font-semibold uppercase text-slate-500">
+        <div className="surface-resting p-5 rounded-3xl">
+          <p className="text-[11px] font-mono font-semibold uppercase text-zinc-400">
             Gross Booking Volume
           </p>
-          <p className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1">
+          <p className="font-serif text-3xl font-bold text-[#D9AE54] mt-1">
             {formatCents(totalRevenueCents, { includeDecimals: true })}
           </p>
         </div>
@@ -174,21 +174,21 @@ export default function HostDashboardPage() {
 
       {/* Host's Venues Section */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-          Your Listed Spaces ({venues.length})
+        <h2 className="font-serif text-2xl font-bold text-zinc-100">
+          Your Curated Spaces ({venues.length})
         </h2>
 
         {venues.length === 0 ? (
-          <div className="p-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center space-y-3">
-            <p className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="surface-resting p-10 rounded-3xl text-center space-y-3">
+            <p className="font-serif text-lg font-bold text-zinc-100">
               You haven&apos;t listed any venues yet
             </p>
-            <p className="text-xs text-slate-500">
-              Create your first event space listing to start receiving bookings.
+            <p className="text-xs font-mono text-zinc-400">
+              Create your first architectural listing to start receiving bookings.
             </p>
             <Link
               href="/host/venues/new"
-              className="inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+              className="inline-block px-4 py-2 rounded-xl btn-volumetric-gold text-xs font-bold uppercase tracking-wider"
             >
               + Create First Listing
             </Link>
@@ -207,32 +207,29 @@ export default function HostDashboardPage() {
               return (
                 <div
                   key={venue._id}
-                  className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between space-y-4 shadow-xs"
+                  className="surface-resting p-5 rounded-3xl flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <Link
                         href={`/venues/${venue._id}`}
-                        className="font-bold text-base text-slate-900 dark:text-white hover:text-indigo-600 line-clamp-1"
+                        className="font-serif font-bold text-base text-zinc-100 hover:text-[#D9AE54] transition-colors line-clamp-1"
                       >
                         {venue.title}
                       </Link>
-                      <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 shrink-0">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-[#D9AE54]/15 text-[#D9AE54] border border-[#D9AE54]/30 shrink-0">
                         {formatCents(venue.pricePerHour)}/hr
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">
-                      📍 {venue.city}, {venue.country} • 👥 {venue.capacity}{' '}
-                      guests
+                    <p className="text-xs text-zinc-400 font-mono">
+                      📍 {venue.city}, {venue.country} • 👥 {venue.capacity} guests
                     </p>
-                    <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                      📅 {venueBookingsCount}{' '}
-                      {venueBookingsCount === 1 ? 'booking' : 'bookings'}{' '}
-                      recorded
+                    <p className="text-xs font-mono text-zinc-300">
+                      📅 {venueBookingsCount} {venueBookingsCount === 1 ? 'booking' : 'bookings'} recorded
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <div className="pt-3 border-t border-white/[0.05] flex items-center justify-between gap-2">
                     <button
                       type="button"
                       onClick={() =>
@@ -240,10 +237,10 @@ export default function HostDashboardPage() {
                           selectedVenueFilter === venue._id ? 'all' : venue._id,
                         )
                       }
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold cursor-pointer ${
                         selectedVenueFilter === venue._id
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                          ? 'bg-[#D9AE54] text-black'
+                          : 'bg-[#18181b] border border-white/5 text-zinc-300 hover:text-white'
                       }`}
                     >
                       {selectedVenueFilter === venue._id
@@ -254,7 +251,7 @@ export default function HostDashboardPage() {
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/host/venues/${venue._id}/edit`}
-                        className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
+                        className="px-3 py-1.5 rounded-xl border border-white/10 text-xs font-mono font-semibold text-zinc-200 hover:bg-white/[0.04]"
                       >
                         Edit
                       </Link>
@@ -262,7 +259,7 @@ export default function HostDashboardPage() {
                         type="button"
                         disabled={busyId === venue._id}
                         onClick={() => handleDeleteVenue(venue._id)}
-                        className="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 dark:bg-rose-950/60 dark:text-rose-300 text-xs font-semibold cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-rose-950/40 border border-rose-900/40 text-rose-300 text-xs font-mono font-semibold hover:bg-rose-900/50 cursor-pointer"
                       >
                         Delete
                       </button>
@@ -278,14 +275,14 @@ export default function HostDashboardPage() {
       {/* Incoming Bookings Section */}
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="font-serif text-2xl font-bold text-zinc-100">
             Incoming Venue Bookings ({filteredBookings.length})
           </h2>
           {selectedVenueFilter !== 'all' && (
             <button
               type="button"
               onClick={() => setSelectedVenueFilter('all')}
-              className="text-xs font-semibold text-indigo-600 hover:underline cursor-pointer"
+              className="text-xs font-mono text-[#D9AE54] hover:underline cursor-pointer"
             >
               Show bookings for all venues
             </button>
@@ -293,7 +290,7 @@ export default function HostDashboardPage() {
         </div>
 
         {filteredBookings.length === 0 ? (
-          <div className="p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center text-sm text-slate-500">
+          <div className="surface-resting p-8 rounded-3xl text-center text-sm font-mono text-zinc-400">
             No bookings found for the selected filter.
           </div>
         ) : (
@@ -305,22 +302,21 @@ export default function HostDashboardPage() {
               return (
                 <div
                   key={b._id}
-                  className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  className="surface-resting p-5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-sm text-slate-900 dark:text-white">
+                      <span className="font-serif font-bold text-sm text-zinc-100">
                         {vObj?.title || 'Venue'}
                       </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase border border-white/10 bg-[#161619] text-zinc-300">
                         {b.status}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">
-                      👤 Renter: {rObj?.name || 'Guest'} (
-                      {rObj?.email || 'verified'})
+                    <p className="text-xs text-zinc-400 font-mono">
+                      👤 Renter: {rObj?.name || 'Guest'} ({rObj?.email || 'verified'})
                     </p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                    <p className="text-xs font-mono text-zinc-300">
                       🗓️{' '}
                       {new Date(b.startTime)
                         .toISOString()
@@ -332,7 +328,7 @@ export default function HostDashboardPage() {
                         .replace('T', ' ')
                         .slice(0, 16)}{' '}
                       UTC •{' '}
-                      <strong>
+                      <strong className="text-[#D9AE54]">
                         {formatCents(b.totalPrice, { includeDecimals: true })}
                       </strong>
                     </p>
@@ -344,7 +340,7 @@ export default function HostDashboardPage() {
                         type="button"
                         disabled={busyId === b._id}
                         onClick={() => handleBookingStatus(b._id, 'confirm')}
-                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-xl bg-emerald-950/40 text-emerald-300 border border-emerald-900/40 text-xs font-mono font-semibold hover:bg-emerald-900/50 cursor-pointer"
                       >
                         Confirm
                       </button>
@@ -354,7 +350,7 @@ export default function HostDashboardPage() {
                         type="button"
                         disabled={busyId === b._id}
                         onClick={() => handleBookingStatus(b._id, 'complete')}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-xl bg-[#D9AE54] text-black text-xs font-mono font-bold cursor-pointer hover:brightness-110"
                       >
                         Mark Completed
                       </button>
@@ -364,7 +360,7 @@ export default function HostDashboardPage() {
                         type="button"
                         disabled={busyId === b._id}
                         onClick={() => handleBookingStatus(b._id, 'cancel')}
-                        className="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 dark:bg-rose-950/60 dark:text-rose-300 text-xs font-semibold cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-900/40 text-xs font-mono font-semibold hover:bg-rose-900/50 cursor-pointer"
                       >
                         Cancel
                       </button>
