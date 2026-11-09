@@ -29,11 +29,14 @@ const QUICK_CITIES = [
   'Tokyo',
 ];
 
+type ViewMode = 'bento' | 'split' | 'specs';
+
 export default function HomePage() {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('bento');
 
   // Filter states
   const [city, setCity] = useState<string>('');
@@ -43,7 +46,6 @@ export default function HomePage() {
   const [capacity, setCapacity] = useState<string>('');
   const [maxPriceDollars, setMaxPriceDollars] = useState<string>('');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [showMap, setShowMap] = useState<boolean>(true);
 
   // Pagination
   const [page, setPage] = useState<number>(1);
@@ -183,13 +185,13 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Level 1 Resting Surface: Volumetric Filter Suite */}
+          {/* Volumetric Filter Suite */}
           <form
             onSubmit={handleSearchSubmit}
             className="surface-resting rounded-3xl p-6 sm:p-7 space-y-6"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-              {/* Group A: Destination + Date (Carved-in channel inputs) */}
+              {/* Group A: Destination + Date */}
               <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-3.5 rounded-2xl bg-[#09090b]/80 border border-white/[0.03]">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
@@ -218,7 +220,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Group B: Capacity + Max Price (Carved-in channels) */}
+              {/* Group B: Capacity + Max Price */}
               <div className="lg:col-span-4 grid grid-cols-2 gap-3.5 p-3.5 rounded-2xl bg-[#09090b]/80 border border-white/[0.03]">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
@@ -249,7 +251,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Group C: Volumetric Button CTA */}
+              {/* Group C: Action Buttons */}
               <div className="lg:col-span-2 flex flex-col sm:flex-row lg:flex-col gap-2.5">
                 <button
                   type="submit"
@@ -267,7 +269,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Time window selection when date selected */}
+            {/* Time window selection */}
             {date && (
               <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-white/[0.04] text-xs">
                 <span className="font-semibold text-zinc-400">
@@ -302,7 +304,7 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Matte Amenity Chips sitting directly on the surface */}
+            {/* Amenities Chips */}
             <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/[0.04]">
               <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mr-1">
                 Equipment:
@@ -327,7 +329,7 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Differentiated City Quick-Filter Tabs */}
+          {/* Quick City Filters */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-b border-white/[0.06] pb-3">
             <div className="flex flex-wrap items-center gap-1 sm:gap-2">
               {QUICK_CITIES.map((c) => {
@@ -361,36 +363,60 @@ export default function HomePage() {
                 );
               })}
             </div>
-
-            <button
-              type="button"
-              onClick={() => setShowMap((v) => !v)}
-              className="text-xs font-semibold px-4 py-1.5 rounded-full border border-white/10 text-zinc-300 hover:bg-white/[0.04] transition-colors cursor-pointer"
-            >
-              {showMap ? 'Hide Radar Map' : 'Show Radar Map'}
-            </button>
           </div>
         </div>
       </section>
 
-      {/* Main Catalog View with Smooth Transitional Spacing */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-9">
-        {showMap && !loading && venues.length > 0 && (
-          <VenueMap
-            venues={venues}
-            selectedVenue={selectedVenue}
-            onSelectVenue={setSelectedVenue}
-          />
-        )}
-
-        <div className="flex items-center justify-between">
+      {/* Main Catalog View: Multi-Mode Spatial Presentation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Header & Spatial View Switcher */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-white/[0.05]">
           <div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-zinc-100 tracking-tight">
-              {city ? `Event Spaces in ${city}` : 'Global Architectural Venue Collection'}
+            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight">
+              {city ? `Architectural Spaces in ${city}` : 'Global Architectural Venue Collection'}
             </h2>
-            <p className="text-xs text-zinc-500 mt-1">
-              Showing {venues.length} of {total} verified spaces
+            <p className="text-xs text-zinc-500 mt-1 font-mono uppercase tracking-wider">
+              {venues.length} Spaces Cataloged • Multi-Region Availability
             </p>
+          </div>
+
+          {/* Perspective View Switcher */}
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#111113] border border-white/[0.08] self-start md:self-auto shadow-inner">
+            <button
+              type="button"
+              onClick={() => setViewMode('bento')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'bento'
+                  ? 'bg-[#18181b] text-[#D9AE54] shadow-xs border border-white/10'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <span>🏛️ Editorial Bento</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode('split')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'split'
+                  ? 'bg-[#18181b] text-[#D9AE54] shadow-xs border border-white/10'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <span>🗺️ Split Map Runway</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode('specs')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'specs'
+                  ? 'bg-[#18181b] text-[#D9AE54] shadow-xs border border-white/10'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <span>📐 Specifications Matrix</span>
+            </button>
           </div>
         </div>
 
@@ -398,9 +424,7 @@ export default function HomePage() {
           <VenueGridSkeleton count={6} />
         ) : error ? (
           <div className="rounded-3xl border border-rose-900/40 bg-rose-950/20 p-10 text-center space-y-3 shadow-xs">
-            <p className="text-base font-bold text-rose-400">
-              Unable to load venues
-            </p>
+            <p className="text-base font-bold text-rose-400">Unable to load venues</p>
             <p className="text-xs text-rose-500 max-w-md mx-auto">{error}</p>
             <button
               type="button"
@@ -412,9 +436,7 @@ export default function HomePage() {
           </div>
         ) : venues.length === 0 ? (
           <div className="surface-resting rounded-3xl p-12 text-center space-y-3">
-            <p className="text-base font-bold text-zinc-200">
-              No venues match your current filters
-            </p>
+            <p className="text-base font-bold text-zinc-200">No venues match your current filters</p>
             <p className="text-xs text-zinc-500 max-w-md mx-auto">
               Try adjusting your capacity criteria, date slot, or explore all cities.
             </p>
@@ -428,16 +450,117 @@ export default function HomePage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {venues.map((venue) => (
-                <VenueCard
-                  key={venue._id}
-                  venue={venue}
-                  isSelected={selectedVenue?._id === venue._id}
-                  onSelect={setSelectedVenue}
-                />
-              ))}
-            </div>
+            {/* ─────────────────────────────────────────────────────────────────
+                PERSPECTIVE 1: EDITORIAL BENTO LAYOUT
+                Lead card spans 2 columns with full blueprint narrative specs
+               ───────────────────────────────────────────────────────────────── */}
+            {viewMode === 'bento' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                {venues.map((venue, idx) => (
+                  <VenueCard
+                    key={venue._id}
+                    venue={venue}
+                    variant={idx === 0 ? 'featured' : 'standard'}
+                    isSelected={selectedVenue?._id === venue._id}
+                    onSelect={setSelectedVenue}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* ─────────────────────────────────────────────────────────────────
+                PERSPECTIVE 2: SPLIT MAP RUNWAY VIEW
+                Left column: scrollable compact cards. Right column: sticky radar map.
+               ───────────────────────────────────────────────────────────────── */}
+            {viewMode === 'split' && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div className="lg:col-span-6 space-y-3.5">
+                  {venues.map((venue) => (
+                    <VenueCard
+                      key={venue._id}
+                      venue={venue}
+                      variant="compact"
+                      isSelected={selectedVenue?._id === venue._id}
+                      onSelect={setSelectedVenue}
+                    />
+                  ))}
+                </div>
+
+                <div className="lg:col-span-6 lg:sticky lg:top-24">
+                  <VenueMap
+                    venues={venues}
+                    selectedVenue={selectedVenue}
+                    onSelectVenue={setSelectedVenue}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* ─────────────────────────────────────────────────────────────────
+                PERSPECTIVE 3: ARCHITECTURAL SPECIFICATIONS MATRIX
+                Direct comparison of acoustic treatment, ceiling heights, capacity,
+                and instant reservation models.
+               ───────────────────────────────────────────────────────────────── */}
+            {viewMode === 'specs' && (
+              <div className="surface-resting rounded-3xl overflow-hidden border border-white/[0.06]">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs font-mono">
+                    <thead className="bg-[#161619] text-zinc-400 uppercase tracking-widest border-b border-white/[0.06]">
+                      <tr>
+                        <th className="py-4 px-5">Venue & Style</th>
+                        <th className="py-4 px-5">Location</th>
+                        <th className="py-4 px-5">Max Guests</th>
+                        <th className="py-4 px-5">Floor Scale</th>
+                        <th className="py-4 px-5">Ceiling Height</th>
+                        <th className="py-4 px-5">Rate</th>
+                        <th className="py-4 px-5 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.04]">
+                      {venues.map((v) => (
+                        <tr
+                          key={v._id}
+                          className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                          onClick={() => setSelectedVenue(v)}
+                        >
+                          <td className="py-4 px-5">
+                            <span className="font-serif font-bold text-sm text-zinc-100 block">
+                              {v.title}
+                            </span>
+                            <span className="text-[10px] text-[#D9AE54] tracking-wider uppercase">
+                              {v.instantBook ? '⚡ Instant Lock' : 'Concierge Approval'}
+                            </span>
+                          </td>
+                          <td className="py-4 px-5 text-zinc-300">
+                            {v.city}, {v.country}
+                          </td>
+                          <td className="py-4 px-5 font-bold text-zinc-200">
+                            {v.capacity}
+                          </td>
+                          <td className="py-4 px-5 text-zinc-400">
+                            {v.capacity * 30} sq ft
+                          </td>
+                          <td className="py-4 px-5 text-zinc-400">
+                            {v.capacity > 150 ? '22ft Heights' : '16ft Heights'}
+                          </td>
+                          <td className="py-4 px-5 font-extrabold text-[#D9AE54]">
+                            ${((v.pricePerHour || 0) / 100).toFixed(0)}/hr
+                          </td>
+                          <td className="py-4 px-5 text-right">
+                            <a
+                              href={`/book/${v._id}`}
+                              className="btn-volumetric-gold px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider inline-block"
+                            >
+                              Reserve
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
@@ -450,7 +573,7 @@ export default function HomePage() {
                 >
                   ← Previous
                 </button>
-                <span className="text-xs font-semibold text-zinc-500">
+                <span className="text-xs font-semibold text-zinc-500 font-mono">
                   Page {page} of {totalPages}
                 </span>
                 <button
