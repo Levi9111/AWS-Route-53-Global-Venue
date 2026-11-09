@@ -50,3 +50,4 @@ export function GlobalError({
 }
 
 export default GlobalError;
+

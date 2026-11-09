@@ -61,3 +61,4 @@ export function getBookingStatusLabel(status: string): string {
       return status;
   }
 }
+

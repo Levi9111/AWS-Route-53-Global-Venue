@@ -4,3 +4,4 @@ export const REVIEW_MIN_RATING = 1;
 export const REVIEW_MAX_RATING = 5;
 
 export const reviewSearchableFields = ['comment'];
+

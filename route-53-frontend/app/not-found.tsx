@@ -36,3 +36,4 @@ export function NotFound() {
 }
 
 export default NotFound;
+

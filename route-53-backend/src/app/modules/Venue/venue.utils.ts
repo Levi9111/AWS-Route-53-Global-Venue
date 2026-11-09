@@ -47,3 +47,4 @@ export function validateCoordinates(lat: number, lng: number): boolean {
     lng <= 180
   );
 }
+
