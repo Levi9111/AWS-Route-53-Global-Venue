@@ -1,11 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
+import config from '../../config';
 import { TUserRole } from './auth.interface';
 
 export interface IUser {
-  _id?: string;
+  _id?: Types.ObjectId;
+  name: string;
   email: string;
-  password: string;
+  passwordHash: string;
   role: TUserRole;
   createdAt?: Date;
   updatedAt?: Date;
@@ -14,6 +16,13 @@ export interface IUser {
 
 const userSchema = new Schema<IUser>(
   {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 100,
+    },
     email: {
       type: String,
       required: true,
@@ -22,32 +31,53 @@ const userSchema = new Schema<IUser>(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
     },
-    password: {
+    passwordHash: {
       type: String,
       required: true,
       select: false,
-      minlength: 6,
     },
     role: {
       type: String,
-      enum: ['ADMIN', 'USER'],
-      default: 'USER',
+      enum: ['renter', 'host', 'admin'],
+      default: 'renter',
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: {
+      transform(_doc, ret: Record<string, unknown>) {
+        delete ret.passwordHash;
+        delete ret.__v;
+        return ret;
+      },
+    },
+    toObject: {
+      transform(_doc, ret: Record<string, unknown>) {
+        delete ret.passwordHash;
+        delete ret.__v;
+        return ret;
+      },
+    },
+  },
 );
 
 userSchema.pre('save', async function () {
-  if (!this.isModified('password')) {
+  if (!this.isModified('passwordHash')) {
     return;
   }
-  this.password = await bcrypt.hash(this.password, 10);
+  // Only hash if not already a bcrypt hash
+  if (!this.passwordHash.startsWith('$2b$') && !this.passwordHash.startsWith('$2a$')) {
+    this.passwordHash = await bcrypt.hash(
+      this.passwordHash,
+      config.bcrypt_salt_rounds || 12,
+    );
+  }
 });
 
 userSchema.methods.comparePassword = async function (
   plainPassword: string,
 ): Promise<boolean> {
-  return bcrypt.compare(plainPassword, this.password);
+  return bcrypt.compare(plainPassword, this.passwordHash);
 };
 
 export const UserModel = model<IUser>('User', userSchema);

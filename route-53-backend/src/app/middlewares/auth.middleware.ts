@@ -9,38 +9,99 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      user: JwtPayload & { userId: string; role: string };
+      user: JwtPayload & { userId: string; role: string; email?: string };
     }
   }
 }
 
-const auth = (...requiredRoles: string[]) => {
-  return (req: Request, _res: Response, next: NextFunction): void => {
-    try {
-      const token = req.cookies?.accessToken;
+function extractToken(req: Request): string | undefined {
+  if (req.cookies?.accessToken) {
+    return req.cookies.accessToken;
+  }
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.slice(7).trim();
+  }
+  return undefined;
+}
 
-      if (!token) {
-        return next(
-          new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!'),
-        );
-      }
+export const requireAuth = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): void => {
+  try {
+    const token = extractToken(req);
 
-      const decoded = verifyToken(token, config.jwt_access_secret as string);
-
-      if (requiredRoles.length && !requiredRoles.includes(decoded.role)) {
-        return next(
-          new AppError(
-            StatusCodes.FORBIDDEN,
-            'You do not have the required permissions!',
-          ),
-        );
-      }
-
-      req.user = decoded as JwtPayload & { userId: string; role: string };
-      next();
-    } catch {
-      next(new AppError(StatusCodes.UNAUTHORIZED, 'Invalid or expired token!'));
+    if (!token) {
+      return next(
+        new AppError(
+          StatusCodes.UNAUTHORIZED,
+          'Authentication required. Please log in.',
+          'UNAUTHORIZED',
+        ),
+      );
     }
+
+    const decoded = verifyToken(token, config.jwt_secret);
+    req.user = decoded as JwtPayload & {
+      userId: string;
+      role: string;
+      email?: string;
+    };
+    next();
+  } catch {
+    next(
+      new AppError(
+        StatusCodes.UNAUTHORIZED,
+        'Invalid or expired authentication token.',
+        'UNAUTHORIZED',
+      ),
+    );
+  }
+};
+
+export const requireRole = (...roles: string[]) => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      return next(
+        new AppError(
+          StatusCodes.UNAUTHORIZED,
+          'Authentication required. Please log in.',
+          'UNAUTHORIZED',
+        ),
+      );
+    }
+
+    if (
+      roles.length > 0 &&
+      !roles.includes(req.user.role) &&
+      req.user.role !== 'admin'
+    ) {
+      return next(
+        new AppError(
+          StatusCodes.FORBIDDEN,
+          `Access denied. Required role: ${roles.join(' or ')}.`,
+          'FORBIDDEN',
+        ),
+      );
+    }
+
+    next();
+  };
+};
+
+const auth = (...requiredRoles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    requireAuth(req, res, (err?: unknown) => {
+      if (err) {
+        return next(err);
+      }
+      if (requiredRoles.length > 0) {
+        return requireRole(...requiredRoles)(req, res, next);
+      }
+      next();
+    });
   };
 };
 
