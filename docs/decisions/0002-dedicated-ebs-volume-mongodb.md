@@ -19,3 +19,4 @@ Decouples the database state from the EC2 lifecycle, allowing the instance to be
   - Isolated I/O channel for WiredTiger storage engine.
 - **Negative / Considerations:**
   - Requires mounting `/dev/xvdf` to `/var/lib/mongodb` and configuring `/etc/fstab` with `nofail` on system boot.
+

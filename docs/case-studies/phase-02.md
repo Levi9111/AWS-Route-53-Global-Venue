@@ -36,3 +36,4 @@ The following infrastructure milestones were verified and captured during provis
 - **Security Group Inbound Rules:** `docs/screenshots/07-mongo-sg-inbound-rules.png` — verified port `27017` ingress policies.
 - **Compute Instance State:** `docs/screenshots/08-ec2-instance-running.png` — verified EC2 instance in `running` state with 2/2 status checks passed.
 - **Storage Attachment:** `docs/screenshots/09-ebs-volume-attached.png` — verified 10 GiB EBS volume attached in `in-use` state to the database instance.
+
