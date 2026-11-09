@@ -47,7 +47,7 @@
 3. **Stateless Backend Nodes:** Stateless Express services running on AWS ECS Fargate allow horizontal autoscaling without session stickiness or localized file persistence.
 
 ### Database Tier Persistence Architecture (Phase 02)
-- **Dedicated 10 GiB EBS Volume:** Attached to the MongoDB EC2 instance to decouple database state from the compute host lifecycle, allowing instances to be terminated or upgraded without data loss and enabling independent EBS snapshot policies. See full documentation in [Phase 02 Case Study](./phase-02.md).
+- **Dedicated 10 GiB EBS Volume:** Attached to the MongoDB EC2 instance to decouple database state from the compute host lifecycle, allowing instances to be terminated or upgraded without data loss and enabling independent EBS snapshot policies. See full documentation in [Phase 02 Case Study](./phase-02-mongodb-ec2.md).
 
 ---
 
