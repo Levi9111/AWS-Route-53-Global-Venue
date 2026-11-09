@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/create-express-modular@latest/cem-cli.schema.json",
+  "version": "3.3.8",
+  "project": {
+    "name": "route-53-backend",
+    "db": "mongoose",
+    "validator": "zod",
+    "auth": true,
+    "authTokenDelivery": "cookie",
+    "docker": false,
+    "packageManager": "npm"
+  },
+  "structure": {
+    "srcDir": "src",
+    "appDir": "src/app",
+    "modulesDir": "src/app/modules",
+    "middlewaresDir": "src/app/middlewares",
+    "utilsDir": "src/app/utils",
+    "configDir": "src/app/config"
+  },
+  "features": {
+    "testing": false,
+    "websocket": false,
+    "swagger": false
+  }
+}
