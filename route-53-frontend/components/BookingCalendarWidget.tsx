@@ -48,7 +48,6 @@ export function BookingCalendarWidget({
     [venue.bookedSlots],
   );
 
-  // Check if a given hour [hour, hour+1) on selectedDate overlaps any existing active booking
   const isHourBooked = (hour: number): boolean => {
     const slotStart = new Date(
       `${selectedDate}T${String(hour).padStart(2, '0')}:00:00.000Z`,
@@ -64,7 +63,6 @@ export function BookingCalendarWidget({
     });
   };
 
-  // Check if entire selected range [startHour, endHour) has any conflict
   const hasRangeConflict = useMemo(() => {
     if (endHour <= startHour) return true;
     for (let h = startHour; h < endHour; h++) {
@@ -110,47 +108,45 @@ export function BookingCalendarWidget({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-md space-y-5">
-      <div className="flex items-baseline justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+    <div className="rounded-2xl border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-[#121215] p-6 shadow-xl space-y-6">
+      {/* Rate header */}
+      <div className="flex items-baseline justify-between border-b border-zinc-100 dark:border-zinc-800 pb-5">
         <div>
-          <span className="text-2xl font-bold text-slate-900 dark:text-white">
+          <span className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
             {formatCents(venue.pricePerHour)}
           </span>
-          <span className="text-sm text-slate-500 dark:text-slate-400">
-            {' '}
-            / hour
-          </span>
+          <span className="text-sm font-medium text-zinc-400"> / hour</span>
         </div>
         <span
-          className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+          className={`text-xs font-bold px-3 py-1 rounded-full border ${
             venue.instantBook
-              ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300'
-              : 'bg-amber-50 text-amber-700 dark:bg-amber-950/80 dark:text-amber-300'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
+              : 'bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700'
           }`}
         >
-          {venue.instantBook ? '⚡ Instant Confirmation' : '⏳ Host Approval'}
+          {venue.instantBook ? '⚡ Instant Book' : '⏳ Host Approval'}
         </span>
       </div>
 
-      {/* Date Picker */}
+      {/* Date Input */}
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-          Event Date (UTC)
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">
+          Select Event Date (UTC)
         </label>
         <input
           type="date"
           value={selectedDate}
           min={new Date().toISOString().slice(0, 10)}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3.5 py-2.5 text-sm font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
         />
       </div>
 
-      {/* Start / End Hour Selectors */}
+      {/* Start and End selects */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-            Start Time (UTC)
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">
+            Start Time
           </label>
           <select
             value={startHour}
@@ -161,25 +157,24 @@ export function BookingCalendarWidget({
                 setEndHour(nextStart + 1);
               }
             }}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white"
           >
             {HOURS.map((h) => (
               <option key={h} value={h} disabled={isHourBooked(h)}>
-                {String(h).padStart(2, '0')}:00 UTC{' '}
-                {isHourBooked(h) ? '(Booked)' : ''}
+                {String(h).padStart(2, '0')}:00 UTC {isHourBooked(h) ? '(Booked)' : ''}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-            End Time (UTC)
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5">
+            End Time
           </label>
           <select
             value={endHour}
             onChange={(e) => setEndHour(Number(e.target.value))}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white"
           >
             {HOURS.map((h) => h + 1)
               .filter((h) => h > startHour)
@@ -192,20 +187,16 @@ export function BookingCalendarWidget({
         </div>
       </div>
 
-      {/* Interactive Hourly Availability Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Hourly Availability Grid
-          </span>
-          <div className="flex items-center gap-3 text-[11px] text-slate-500">
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-xs bg-indigo-600 inline-block" />{' '}
-              Selected
+      {/* Hourly Timeline Grid */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-[11px] text-zinc-500">
+          <span className="font-bold uppercase tracking-wider">Hourly Availability</span>
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-zinc-900 dark:bg-white" /> Selected
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-xs bg-rose-500/80 inline-block" />{' '}
-              Booked
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-rose-500" /> Booked
             </span>
           </div>
         </div>
@@ -220,12 +211,12 @@ export function BookingCalendarWidget({
                 type="button"
                 disabled={booked}
                 onClick={() => handleHourClick(hour)}
-                className={`py-2 px-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   booked
-                    ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 line-through cursor-not-allowed opacity-75'
+                    ? 'bg-rose-50 text-rose-400 dark:bg-rose-950/40 dark:text-rose-500 line-through cursor-not-allowed opacity-60'
                     : inRange
-                      ? 'bg-indigo-600 text-white shadow-xs cursor-pointer'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 cursor-pointer'
+                      ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-xs'
+                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
                 }`}
               >
                 {String(hour).padStart(2, '0')}:00
@@ -235,37 +226,29 @@ export function BookingCalendarWidget({
         </div>
       </div>
 
-      {/* Conflict Alert */}
+      {/* Conflict notice */}
       {hasRangeConflict && (
-        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs font-medium text-rose-700 dark:text-rose-300">
-          ⚠️ The selected time range overlaps with an existing reservation.
-          Please choose available hours.
+        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs font-medium text-rose-700 dark:text-rose-400">
+          Selected window overlaps an active booking. Please select unreserved hours.
         </div>
       )}
 
-      {/* Price Breakdown in Cents -> Formatted Dollars */}
+      {/* Price breakdown */}
       {durationHours > 0 && !hasRangeConflict && (
-        <div className="rounded-xl bg-slate-50 dark:bg-slate-950 p-4 space-y-2 border border-slate-200/70 dark:border-slate-800">
-          <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+        <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900/70 p-4 space-y-2.5 border border-zinc-200/80 dark:border-zinc-800">
+          <div className="flex justify-between text-xs text-zinc-600 dark:text-zinc-400">
             <span>
-              {formatCents(venue.pricePerHour)} × {durationHours}{' '}
-              {durationHours === 1 ? 'hour' : 'hours'}
+              {formatCents(venue.pricePerHour)} × {durationHours} {durationHours === 1 ? 'hour' : 'hours'}
             </span>
-            <span className="font-medium text-slate-900 dark:text-white">
+            <span className="font-semibold text-zinc-900 dark:text-white">
               {formatCents(totalCents, { includeDecimals: true })}
             </span>
           </div>
-          <div className="flex justify-between text-xs text-slate-500">
-            <span>Platform & Multi-Region Protection</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-medium">
-              Included ($0.00)
+          <div className="pt-2 border-t border-zinc-200/80 dark:border-zinc-800 flex justify-between items-baseline">
+            <span className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
+              Total Amount
             </span>
-          </div>
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-baseline">
-            <span className="text-sm font-bold text-slate-900 dark:text-white">
-              Total ({totalCents.toLocaleString()} cents)
-            </span>
-            <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+            <span className="text-xl font-extrabold text-zinc-900 dark:text-white">
               {formatCents(totalCents, { includeDecimals: true })}
             </span>
           </div>
@@ -276,13 +259,13 @@ export function BookingCalendarWidget({
         type="button"
         disabled={hasRangeConflict || durationHours <= 0 || submitting}
         onClick={handleProceed}
-        className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 text-white shadow-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
+        className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 disabled:opacity-40 text-white dark:text-zinc-950 shadow-md transition-all cursor-pointer disabled:cursor-not-allowed"
       >
         {submitting
-          ? 'Confirming Reservation...'
+          ? 'Confirming Slot...'
           : mode === 'checkout'
-            ? `Confirm & Book (${formatCents(totalCents, { includeDecimals: true })})`
-            : 'Continue to Booking'}
+            ? `Confirm Reservation (${formatCents(totalCents, { includeDecimals: true })})`
+            : 'Proceed to Reservation'}
       </button>
     </div>
   );

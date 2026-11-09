@@ -95,7 +95,7 @@ export default function HomePage() {
         setError(
           err instanceof Error
             ? err.message
-            : 'Unable to load venues right now.',
+            : 'Unable to connect to the venue API.',
         );
       } finally {
         setLoading(false);
@@ -157,61 +157,62 @@ export default function HomePage() {
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
   return (
-    <div className="space-y-8">
-      {/* Hero & Search Filter Bar */}
-      <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white border-b border-slate-800 py-10 sm:py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <div className="max-w-3xl space-y-3">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-              🌍 Global Event Space Marketplace • US-East & EU-West Ready
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-              Book extraordinary spaces for your next landmark event.
+    <div className="space-y-12">
+      {/* Refined Minimalist Hero */}
+      <section className="relative border-b border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#0c0c0e] py-14 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Multi-Region Active Routing • US-East & EU-West</span>
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-extrabold text-zinc-950 dark:text-white tracking-tight leading-[1.08]">
+              Extraordinary spaces for landmark global events.
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base">
-              Real-time availability verification, transparent hourly pricing,
-              and curated architectural venues across global hubs.
+            <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
+              Curated lofts, glass pavilions, auditoriums, and private estates.
+              Real-time server-side slot verification with integer-precision pricing.
             </p>
           </div>
 
-          {/* Search Form */}
+          {/* Unified Floating Filter Bar */}
           <form
             onSubmit={handleSearchSubmit}
-            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 sm:p-5 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 space-y-4"
+            className="rounded-2xl border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-[#121215] p-5 shadow-xl space-y-4"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-              {/* City */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+              {/* City Filter */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  City or Location
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
+                  Destination
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. New York, London, Dublin"
+                  placeholder="New York, London, Tokyo..."
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3.5 py-2 text-xs font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
                 />
               </div>
 
-              {/* Date Availability */}
+              {/* Date Filter */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  Available Date (UTC)
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
+                  Date (UTC)
                 </label>
                 <input
                   type="date"
                   value={date}
                   min={new Date().toISOString().slice(0, 10)}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3.5 py-2 text-xs font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
                 />
               </div>
 
-              {/* Minimum Capacity */}
+              {/* Capacity Filter */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  Min Capacity (Guests)
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
+                  Min Guests
                 </label>
                 <input
                   type="number"
@@ -219,14 +220,14 @@ export default function HomePage() {
                   placeholder="e.g. 50"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3.5 py-2 text-xs font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
                 />
               </div>
 
-              {/* Price Range ($/hr) */}
+              {/* Price Range */}
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
                     Min $/hr
                   </label>
                   <input
@@ -235,11 +236,11 @@ export default function HomePage() {
                     placeholder="$0"
                     value={minPriceDollars}
                     onChange={(e) => setMinPriceDollars(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
                     Max $/hr
                   </label>
                   <input
@@ -248,23 +249,23 @@ export default function HomePage() {
                     placeholder="$1000"
                     value={maxPriceDollars}
                     onChange={(e) => setMaxPriceDollars(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-white transition-all"
                   />
                 </div>
               </div>
 
-              {/* Search Action */}
+              {/* Submit Buttons */}
               <div className="flex items-end gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
                 >
-                  Search Venues
+                  Apply Filters
                 </button>
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  className="py-2.5 px-3 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                   title="Reset all filters"
                 >
                   Reset
@@ -272,16 +273,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Optional Time Range when Date is selected */}
+            {/* Time window selection for date searches */}
             {date && (
-              <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                <span className="font-semibold text-slate-600 dark:text-slate-300">
-                  Time Window on {date} (UTC):
+              <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 text-xs">
+                <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                  Target Window on {date} (UTC):
                 </span>
                 <select
                   value={startHour}
                   onChange={(e) => setStartHour(e.target.value)}
-                  className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2.5 py-1"
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-2.5 py-1 text-xs"
                 >
                   {Array.from({ length: 15 }, (_, i) => i + 8).map((h) => (
                     <option key={h} value={h}>
@@ -289,11 +290,11 @@ export default function HomePage() {
                     </option>
                   ))}
                 </select>
-                <span>to</span>
+                <span className="text-zinc-400">to</span>
                 <select
                   value={endHour}
                   onChange={(e) => setEndHour(e.target.value)}
-                  className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2.5 py-1"
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-2.5 py-1 text-xs"
                 >
                   {Array.from({ length: 15 }, (_, i) => i + 9).map((h) => (
                     <option key={h} value={h}>
@@ -301,15 +302,15 @@ export default function HomePage() {
                     </option>
                   ))}
                 </select>
-                <span className="text-indigo-600 dark:text-indigo-400 font-medium">
-                  ✓ Filters out spaces already reserved during this slot
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                  ✓ Automatically filters out spaces booked during this timeslot
                 </span>
               </div>
             )}
 
-            {/* Amenities Filter Chips */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-              <span className="text-xs font-semibold text-slate-500 mr-1">
+            {/* Amenities Tag Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mr-1">
                 Amenities:
               </span>
               {POPULAR_AMENITIES.map((amenity) => {
@@ -319,10 +320,10 @@ export default function HomePage() {
                     key={amenity}
                     type="button"
                     onClick={() => toggleAmenity(amenity)}
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                       active
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                        ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
                     }`}
                   >
                     {active ? `✓ ${amenity}` : amenity}
@@ -332,9 +333,9 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Quick City Pills */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
+          {/* Quick Filter Cities & Map Toggle */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {QUICK_CITIES.map((c) => {
                 const isAll = c === 'All Cities';
                 const isActive = isAll ? city === '' : city === c;
@@ -347,11 +348,7 @@ export default function HomePage() {
                       setCity(nextCity);
                       setPage(1);
                       venuesApi
-                        .list({
-                          city: nextCity || undefined,
-                          page: 1,
-                          limit,
-                        })
+                        .list({ city: nextCity || undefined, page: 1, limit })
                         .then((res) => {
                           setVenues(res.data || []);
                           setTotal(res.total || 0);
@@ -359,10 +356,10 @@ export default function HomePage() {
                         })
                         .catch(() => {});
                     }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-white text-slate-900 shadow-xs'
-                        : 'bg-slate-800/90 text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700'
                     }`}
                   >
                     {c}
@@ -374,15 +371,15 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => setShowMap((v) => !v)}
-              className="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 cursor-pointer"
+              className="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             >
-              {showMap ? '🗺️ Hide Interactive Map' : '🗺️ Show Interactive Map'}
+              {showMap ? 'Hide Map' : 'Show Map'}
             </button>
           </div>
         </div>
       </section>
 
-      {/* Main Content Area: Interactive Map + Paginated Venue Grid */}
+      {/* Main Catalog View */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {showMap && !loading && venues.length > 0 && (
           <VenueMap
@@ -394,11 +391,11 @@ export default function HomePage() {
 
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              {city ? `Event Spaces in ${city}` : 'Featured Global Event Spaces'}
+            <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
+              {city ? `Event Spaces in ${city}` : 'Global Architectural Venue Collection'}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Showing {venues.length} of {total} available spaces
+            <p className="text-xs text-zinc-500 mt-0.5">
+              Showing {venues.length} of {total} verified spaces
             </p>
           </div>
         </div>
@@ -406,34 +403,33 @@ export default function HomePage() {
         {loading ? (
           <VenueGridSkeleton count={6} />
         ) : error ? (
-          <div className="rounded-2xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 p-8 text-center space-y-3">
-            <p className="text-base font-semibold text-rose-700 dark:text-rose-300">
-              Failed to load venues
+          <div className="rounded-2xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-8 text-center space-y-3">
+            <p className="text-base font-bold text-rose-700 dark:text-rose-400">
+              Unable to load venues
             </p>
-            <p className="text-sm text-rose-600 dark:text-rose-400">{error}</p>
+            <p className="text-xs text-rose-600 dark:text-rose-400 max-w-md mx-auto">{error}</p>
             <button
               type="button"
               onClick={() => fetchVenues(page)}
-              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold cursor-pointer"
+              className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold cursor-pointer"
             >
               Try Again
             </button>
           </div>
         ) : venues.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-12 text-center space-y-3">
-            <p className="text-lg font-bold text-slate-900 dark:text-white">
-              No venues match your exact filters
+          <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121215] p-12 text-center space-y-3">
+            <p className="text-base font-bold text-zinc-900 dark:text-white">
+              No venues match your current filters
             </p>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              Try clearing your date range, adjusting price limits, or exploring
-              all global cities.
+            <p className="text-xs text-zinc-500 max-w-md mx-auto">
+              Try adjusting your capacity criteria, date slot, or explore all cities.
             </p>
             <button
               type="button"
               onClick={handleResetFilters}
-              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold cursor-pointer"
+              className="px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 text-white text-xs font-semibold cursor-pointer"
             >
-              Reset All Filters
+              Reset Filters
             </button>
           </div>
         ) : (
@@ -451,23 +447,23 @@ export default function HomePage() {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-3 pt-4">
+              <div className="flex items-center justify-center gap-3 pt-6">
                 <button
                   type="button"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer disabled:cursor-not-allowed"
+                  className="px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-xs font-medium disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer disabled:cursor-not-allowed"
                 >
                   ← Previous
                 </button>
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <span className="text-xs font-semibold text-zinc-500">
                   Page {page} of {totalPages}
                 </span>
                 <button
                   type="button"
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer disabled:cursor-not-allowed"
+                  className="px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-xs font-medium disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer disabled:cursor-not-allowed"
                 >
                   Next →
                 </button>
