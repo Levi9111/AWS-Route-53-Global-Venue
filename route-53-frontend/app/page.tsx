@@ -164,14 +164,14 @@ export default function HomePage() {
           <div className="max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>Multi-Region Active Routing • US-East & EU-West</span>
+              <span>Premier Architectural & Summit Venues Worldwide</span>
             </div>
             <h1 className="text-4xl sm:text-6xl font-extrabold text-zinc-950 dark:text-white tracking-tight leading-[1.08]">
-              Extraordinary spaces for landmark global events.
+              Reserve extraordinary spaces for landmark events.
             </h1>
             <p className="text-zinc-600 dark:text-zinc-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
-              Curated lofts, glass pavilions, auditoriums, and private estates.
-              Real-time server-side slot verification with integer-precision pricing.
+              Curated lofts, waterfront pavilions, auditoriums, and private estates.
+              Real-time server-side availability verification with transparent integer pricing.
             </p>
           </div>
 
