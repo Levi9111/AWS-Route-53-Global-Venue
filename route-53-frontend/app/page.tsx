@@ -7,6 +7,7 @@ import { dollarsToCents } from '../api/client';
 import { VenueCard } from '../components/VenueCard';
 import { VenueMap } from '../components/VenueMap';
 import { VenueGridSkeleton } from '../components/Skeletons';
+import { DatePicker } from '../components/DatePicker';
 
 const POPULAR_AMENITIES = [
   'WiFi',
@@ -207,15 +208,12 @@ export default function HomePage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Event Date (UTC)
-                  </label>
-                  <input
-                    type="date"
+                  <DatePicker
+                    label="Event Date (UTC)"
                     value={date}
                     min={new Date().toISOString().slice(0, 10)}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="recessed-channel w-full rounded-xl px-3.5 py-2.5 text-xs font-medium text-zinc-100 focus:outline-none transition-all"
+                    onChange={(newDate) => setDate(newDate)}
+                    placeholder="Select date (UTC)..."
                   />
                 </div>
               </div>

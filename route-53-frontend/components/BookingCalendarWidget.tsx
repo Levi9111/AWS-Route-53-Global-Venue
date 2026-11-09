@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookedSlot, Venue } from '../api/types';
 import { formatCents } from '../api/client';
+import { DatePicker } from './DatePicker';
 
 interface BookingCalendarWidgetProps {
   venue: Venue;
@@ -128,17 +129,17 @@ export function BookingCalendarWidget({
         </span>
       </div>
 
-      {/* Date Input */}
+      {/* Date Input with Custom Luxury Architectural Popover */}
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-          Select Event Date (UTC)
-        </label>
-        <input
-          type="date"
+        <DatePicker
+          label="Select Event Date (UTC)"
           value={selectedDate}
           min={new Date().toISOString().slice(0, 10)}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className="w-full rounded-xl recessed-channel px-3.5 py-2.5 text-sm font-medium text-zinc-100 focus:outline-none focus:ring-1 focus:ring-[#D9AE54] transition-all"
+          onChange={(newDate) => {
+            if (newDate) setSelectedDate(newDate);
+          }}
+          clearable={false}
+          placeholder="Select reservation date..."
         />
       </div>
 
