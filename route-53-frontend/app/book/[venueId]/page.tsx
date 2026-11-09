@@ -3,13 +3,13 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { venuesApi } from '../../api/venues';
-import { bookingsApi } from '../../api/bookings';
-import { formatCents } from '../../api/client';
-import { Venue } from '../../api/types';
-import { BookingCalendarWidget } from '../../components/BookingCalendarWidget';
-import { VenueDetailSkeleton } from '../../components/Skeletons';
-import { useAuth } from '../../context/AuthContext';
+import { venuesApi } from '@/api/venues';
+import { bookingsApi } from '@/api/bookings';
+import { formatCents } from '@/api/client';
+import { Venue } from '@/api/types';
+import { BookingCalendarWidget } from '@/components/BookingCalendarWidget';
+import { VenueDetailSkeleton } from '@/components/Skeletons';
+import { useAuth } from '@/context/AuthContext';
 
 function BookVenueContent() {
   const params = useParams<{ venueId: string }>();

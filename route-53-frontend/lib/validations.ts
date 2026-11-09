@@ -34,19 +34,19 @@ export const venueFormSchema = z.object({
   city: z.string().trim().min(2, 'City is required'),
   country: z.string().trim().min(2, 'Country is required'),
   lat: z
-    .number({ invalid_type_error: 'Latitude must be a number' })
+    .number()
     .min(-90, 'Latitude must be between -90 and 90')
     .max(90, 'Latitude must be between -90 and 90'),
   lng: z
-    .number({ invalid_type_error: 'Longitude must be a number' })
+    .number()
     .min(-180, 'Longitude must be between -180 and 180')
     .max(180, 'Longitude must be between -180 and 180'),
   capacity: z
-    .number({ invalid_type_error: 'Capacity must be a number' })
+    .number()
     .int('Capacity must be a whole number')
     .min(1, 'Capacity must be at least 1 guest'),
   pricePerHourDollars: z
-    .number({ invalid_type_error: 'Price per hour must be a number' })
+    .number()
     .min(1, 'Price per hour must be at least $1.00'),
   amenities: z.array(z.string().trim().min(1)),
   photos: z.array(z.string().url('Each photo must be a valid URL')),

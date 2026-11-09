@@ -3,14 +3,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { venuesApi } from '../../api/venues';
-import { reviewsApi } from '../../api/reviews';
-import { bookingsApi } from '../../api/bookings';
-import { Booking, Review, Venue } from '../../api/types';
-import { BookingCalendarWidget } from '../../components/BookingCalendarWidget';
-import { VenueDetailSkeleton } from '../../components/Skeletons';
-import { useAuth } from '../../context/AuthContext';
-import { extractFieldErrors, reviewFormSchema } from '../../lib/validations';
+import { venuesApi } from '@/api/venues';
+import { reviewsApi } from '@/api/reviews';
+import { bookingsApi } from '@/api/bookings';
+import { Booking, Review, Venue } from '@/api/types';
+import { BookingCalendarWidget } from '@/components/BookingCalendarWidget';
+import { VenueDetailSkeleton } from '@/components/Skeletons';
+import { useAuth } from '@/context/AuthContext';
+import { extractFieldErrors, reviewFormSchema } from '@/lib/validations';
 
 const FALLBACK_PHOTO =
   'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80';
