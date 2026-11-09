@@ -1,14 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfcfb;
-  --foreground: #09090b;
+  --background: #0b0b0c;
+  --foreground: #f4f4f5;
 
-  /* Architectural Warm Bronze / Amber Metallic Accent */
-  --accent-gold: #b45309;
-  --accent-gold-hover: #92400e;
-  --accent-gold-light: #fef3c7;
-  --accent-gold-glow: rgba(180, 83, 9, 0.15);
+  /* Architectural Warm Gold/Bronze Material */
+  --gold-top: #d9ae54;
+  --gold-bottom: #c9a24c;
+  --gold-shadow: rgba(201, 162, 76, 0.28);
 }
 
 @theme inline {
@@ -18,15 +17,80 @@
   --font-serif: var(--font-serif, "Playfair Display", Georgia, serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #08080a;
-    --foreground: #fafafa;
-    --accent-gold: #f59e0b;
-    --accent-gold-hover: #d97706;
-    --accent-gold-light: rgba(245, 158, 11, 0.12);
-    --accent-gold-glow: rgba(245, 158, 11, 0.25);
-  }
+/* ── Realistic Lighting & Elevation Scale ────────────────────────────────── */
+
+/* Level 1: Resting Surfaces (Bevelled rim-light + soft contact ambient shadow) */
+.surface-resting {
+  background: #111113;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Level 2: Elevated / Hovered Surfaces (Lifts toward light source) */
+.surface-elevated {
+  background: #141417;
+  box-shadow:
+    0 12px 32px -4px rgba(0, 0, 0, 0.7),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Recessed / Inset Material for Form Input Channels */
+.recessed-channel {
+  background: #09090a;
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.recessed-channel:focus-within {
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 0 0 1px #d9ae54,
+    0 0 14px rgba(217, 174, 84, 0.25);
+}
+
+/* Dimensional Physical Button (Volume, top highlight bevel, click depression) */
+.btn-volumetric-gold {
+  background: linear-gradient(180deg, #d9ae54 0%, #c9a24c 100%);
+  color: #0b0b0c;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(201, 162, 76, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-volumetric-gold:hover {
+  background: linear-gradient(180deg, #e3ba60 0%, #cfab55 100%);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.35),
+    0 8px 20px rgba(201, 162, 76, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-volumetric-gold:active {
+  background: #c9a24c;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 1px 1px rgba(0, 0, 0, 0.2);
+  transform: translateY(1px);
+}
+
+/* Subtle Floating Tag Badges */
+.badge-floating {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 /* Custom Scrollbar */
@@ -36,21 +100,21 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0b0b0c;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(161, 161, 170, 0.25);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(161, 161, 170, 0.45);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 ::selection {
-  background-color: #b45309;
-  color: #ffffff;
+  background-color: #d9ae54;
+  color: #0b0b0c;
 }
 
 body {
