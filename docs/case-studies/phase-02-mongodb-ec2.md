@@ -101,3 +101,4 @@ This database sits behind a tightly restricted Security Group. It will later acc
 - **Network Isolation:** Validated that a Security Group acts as a stateful firewall and successfully isolated the database from the public internet (except for the Admin IP).
 - **Container Persistence:** Proved that Docker containers are ephemeral and state *must* be explicitly mapped to host storage (`-v /data/db:/data/db`) to survive container restarts.
 - **SRE Practices:** Documented every failure for the portfolio, proving an ability to diagnose and recover from common infrastructure pitfalls.
+
