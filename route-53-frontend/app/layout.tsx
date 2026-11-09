@@ -1,10 +1,23 @@
 import type { Metadata } from 'next';
+import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Global VenueFinder — The Landmark Event Spaces Marketplace',
+  title: 'Global VenueFinder — Architectural Event Spaces',
   description:
     'Discover, inspect, and reserve world-class architectural venues, loft galleries, and executive pavilions across major international metropolises.',
   icons: {
@@ -24,36 +37,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased scroll-smooth">
-      <body className="min-h-full flex flex-col bg-[#FAFAFA] dark:bg-[#09090B] text-zinc-900 dark:text-zinc-100 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
+    <html lang="en" className={`${playfair.variable} ${jakarta.variable} h-full antialiased scroll-smooth`}>
+      <body className="min-h-full flex flex-col bg-[#FDFCFB] dark:bg-[#08080A] text-zinc-900 dark:text-zinc-100 font-sans antialiased selection:bg-[#B45309] selection:text-white">
         <AuthProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
-          <footer className="border-t border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0c0e] py-12 mt-20 transition-colors">
+          <footer className="border-t border-zinc-200/70 dark:border-zinc-800/80 bg-white/70 dark:bg-[#0c0c0e]/80 py-14 mt-20 backdrop-blur-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-zinc-200/70 dark:border-zinc-800/60">
-                <div className="space-y-3 md:col-span-2">
-                  <div className="flex items-center gap-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-zinc-200/60 dark:border-zinc-800/60">
+                <div className="space-y-3.5 md:col-span-2">
+                  <div className="flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/icon-192.png"
                       alt="Logo"
-                      className="w-7 h-7 rounded-lg object-cover"
+                      className="w-8 h-8 rounded-xl object-cover shadow-xs"
                     />
-                    <span className="font-extrabold text-base tracking-tight text-zinc-900 dark:text-white">
+                    <span className="font-serif font-bold text-lg tracking-tight text-zinc-900 dark:text-white">
                       Global VenueFinder
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm leading-relaxed">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md leading-relaxed font-normal">
                     The premium architectural marketplace for private summits, executive retreats, galas, and landmark event productions.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200 mb-3">
-                    Locations
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#B45309] dark:text-[#FBBF24] mb-3.5">
+                    Global Metropolises
                   </h4>
-                  <ul className="space-y-2 text-xs text-zinc-500 dark:text-zinc-400">
+                  <ul className="space-y-2 text-xs text-zinc-600 dark:text-zinc-400">
                     <li>New York City (US-East)</li>
                     <li>London (EU-West)</li>
                     <li>Dublin Docklands</li>
@@ -62,22 +75,22 @@ export default function RootLayout({
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-200 mb-3">
-                    Infrastructure
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#B45309] dark:text-[#FBBF24] mb-3.5">
+                    Stateless Architecture
                   </h4>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Designed for AWS ECS multi-region active routing, AWS Route 53 health checks, and shared database replication.
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                    Designed for AWS ECS multi-region active routing, AWS Route 53 health monitoring, and distributed MongoDB replication.
                   </p>
                 </div>
               </div>
 
               <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400">
                 <p>© {new Date().getFullYear()} Global VenueFinder Inc. All rights reserved.</p>
-                <p className="flex items-center gap-4">
+                <div className="flex items-center gap-4 text-zinc-500 dark:text-zinc-400">
                   <span>ISO 8601 UTC Synchronized</span>
                   <span>•</span>
                   <span>Integer Cents Precision</span>
-                </p>
+                </div>
               </div>
             </div>
           </footer>
