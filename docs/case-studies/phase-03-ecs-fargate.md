@@ -64,3 +64,4 @@ The stateless backend containers execute on AWS ECS Fargate, establishing outbou
 - [x] **Docker Image Push:** `docs/screenshots/16-ecr-image-pushed.png`
 - [x] **Task Definition Specification:** `docs/screenshots/18-task-definition-created.png`
 - [x] **ECS Cluster Provisioned:** Fargate compute plane active in `us-east-1`.
+

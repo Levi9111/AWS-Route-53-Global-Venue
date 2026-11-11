@@ -20,3 +20,6 @@ build/
 # Logs & OS
 *.log
 .DS_Store
+
+
+mongodb-venuefinder.pem
