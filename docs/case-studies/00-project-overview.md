@@ -91,7 +91,19 @@ The platform enforces double-booking prevention through two coordinated layers:
 ## 5. Containerization & Verification
 
 Both services feature non-root, multi-stage Alpine Dockerfiles:
-- `route-53-backend/Dockerfile`: Node 22 Alpine builder stage compiles TypeScript with CEM convention validation, pruning dev dependencies into a slim runner container with an integrated fetch healthcheck. Image naming follows `venuefinder-backend` matching the AWS ECR repository, using `:latest` for initial MVP rollout (see [ADR-0003](../decisions/0003-image-naming-convention-ecr.md)).
+- `route-53-backend/Dockerfile`: Node 22 Alpine builder stage compiles TypeScript with CEM convention validation, pruning dev dependencies into a slim runner container with an integrated fetch healthcheck. Image naming follows `venuefinder-backend` matching the AWS ECR repository, using `:latest` for initial MVP rollout (see [ADR-0003](../decisions/0003-image-naming-convention-ecr.md) and [Phase 03 Case Study](./phase-03-ecs-fargate.md)).
 - `route-53-frontend/Dockerfile`: Multi-stage build producing static and dynamic Next.js App Router bundles served by an unprivileged `appuser`.
 - `docker-compose.yml`: Coordinates MongoDB 7, backend daemon, and frontend web server with healthcheck dependencies.
+
+---
+
+## 6. SRE Operational Post-Mortems & Failure Diagnoses
+
+| Incident | Root Cause | Diagnosis & Resolution | Phase |
+| :--- | :--- | :--- | :--- |
+| **EBS Volume Attach Ineligible** | Cross-AZ mismatch between EC2 (`us-east-1a`) and EBS (`us-east-1b`). | Re-provisioned volume in matching AZ; enforced explicit AZ targeting. | [Phase 02](./phase-02-mongodb-ec2.md) |
+| **systemd Mount Table Cache Outdated** | Editing `/etc/fstab` does not automatically notify running `systemd` daemon. | Executed `sudo systemctl daemon-reload` to synchronize kernel mount state. | [Phase 02](./phase-02-mongodb-ec2.md) |
+| **Mongo URI Credential Parse Failure** | Base64-generated password contained unescaped `/` delimiter. | Switched credential generation to hex (`openssl rand -hex 16`) to guarantee alphanumeric safety. | [Phase 02](./phase-02-mongodb-ec2.md) |
+| **Missing ECS Cluster on Task Launch** | Cluster creation inadvertently skipped during task definition review. | Returned to ECS Console and provisioned Fargate cluster in `us-east-1` before service deployment. | [Phase 03](./phase-03-ecs-fargate.md) |
+
 
