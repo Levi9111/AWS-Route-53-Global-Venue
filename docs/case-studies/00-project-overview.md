@@ -91,7 +91,7 @@ The platform enforces double-booking prevention through two coordinated layers:
 ## 5. Containerization & Verification
 
 Both services feature non-root, multi-stage Alpine Dockerfiles:
-- `route-53-backend/Dockerfile`: Node 22 Alpine builder stage compiles TypeScript with CEM convention validation, pruning dev dependencies into a slim runner container with an integrated fetch healthcheck.
+- `route-53-backend/Dockerfile`: Node 22 Alpine builder stage compiles TypeScript with CEM convention validation, pruning dev dependencies into a slim runner container with an integrated fetch healthcheck. Image naming follows `venuefinder-backend` matching the AWS ECR repository, using `:latest` for initial MVP rollout (see [ADR-0003](../decisions/0003-image-naming-convention-ecr.md)).
 - `route-53-frontend/Dockerfile`: Multi-stage build producing static and dynamic Next.js App Router bundles served by an unprivileged `appuser`.
 - `docker-compose.yml`: Coordinates MongoDB 7, backend daemon, and frontend web server with healthcheck dependencies.
 
