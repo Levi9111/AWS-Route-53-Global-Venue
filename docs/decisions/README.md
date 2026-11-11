@@ -23,3 +23,4 @@ This directory contains the immutable record of key architectural decisions made
 ### 3. Route 53 Multi-Region Routing & Failover
 > **Decision:** Employed Route 53 latency and failover routing with health checks probing stateless backend endpoints on port 5000 across `us-east-1` and `eu-west-1`.  
 > **Impact:** High availability, zero-downtime regional failover within 30 seconds, and sub-50ms latencies for international clients.
+

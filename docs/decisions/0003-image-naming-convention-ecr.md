@@ -21,3 +21,4 @@ Used `venuefinder-backend` to match the ECR repository name, ensuring clear mapp
   - Standardizes task definition image references across both `us-east-1` and `eu-west-1`.
 - **Negative / Considerations:**
   - For production post-MVP, immutable image tags (e.g., git commit SHA `venuefinder-backend:${GITHUB_SHA}`) should be introduced to guarantee deterministic rollbacks and prevent registry tag overwrites.
+

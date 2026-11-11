@@ -20,3 +20,4 @@ Deploy stateless backend microservices across two AWS regions (`us-east-1` and `
   - Minimal regional routing latency.
 - **Negative / Considerations:**
   - Cross-region egress charges from `eu-west-1` to the central database in `us-east-1`.
+
