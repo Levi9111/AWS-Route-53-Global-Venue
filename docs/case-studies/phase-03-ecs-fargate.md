@@ -63,5 +63,21 @@ The stateless backend containers execute on AWS ECS Fargate, establishing outbou
 - [x] **ECR Repository Creation:** `docs/screenshots/15-ecr-repo-created.png`
 - [x] **Docker Image Push:** `docs/screenshots/16-ecr-image-pushed.png`
 - [x] **Task Definition Specification:** `docs/screenshots/18-task-definition-created.png`
-- [x] **ECS Cluster Provisioned:** Fargate compute plane active in `us-east-1`.
+- [x] **ECS Cluster Provisioned:** Fargate compute plane active in `us-east-1` (`docs/screenshots/17-success-ecs-cluster-created.png`).
+
+---
+
+## 🎓 What I Learned (SRE Concepts)
+
+### Concept: Orphaned Resources
+In cloud infrastructure, resource lifecycles are rarely monolithic. Deleting a higher-level orchestration resource does not automatically garbage-collect its dependent downstream components.
+
+### Lesson: 
+In AWS, deleting a service (like ECS) does not cascade to delete the surrounding infrastructure (IAM roles, log groups, security groups). As an SRE, you must understand this dependency tree to prevent "zombie" resources from silently accumulating and costing money. For this project, we reused the IAM roles, security groups, and task definitions to save time.
+
+### Key Takeaways for Production Engineering:
+1. **Dependency Mapping:** Always document the parent-child relationship between compute services and security/logging primitives (ECS Service $\rightarrow$ Task Definition $\rightarrow$ IAM Execution Role $\rightarrow$ Security Groups $\rightarrow$ CloudWatch Log Groups).
+2. **Zombie Resource Prevention:** Audit unused CloudWatch log groups, unattached ENIs, and idle security groups during infrastructure teardowns to prevent creeping billing overhead.
+3. **Reusability & Iteration Speed:** Decoupled IAM execution roles and security groups can be safely rebound to updated service definitions, accelerating recovery and redeployment cycles.
+
 

@@ -106,4 +106,8 @@ Both services feature non-root, multi-stage Alpine Dockerfiles:
 | **Mongo URI Credential Parse Failure** | Base64-generated password contained unescaped `/` delimiter. | Switched credential generation to hex (`openssl rand -hex 16`) to guarantee alphanumeric safety. | [Phase 02](./phase-02-mongodb-ec2.md) |
 | **Missing ECS Cluster on Task Launch** | Cluster creation inadvertently skipped during task definition review. | Returned to ECS Console and provisioned Fargate cluster in `us-east-1` before service deployment. | [Phase 03](./phase-03-ecs-fargate.md) |
 
+### Key SRE Principle: Managing Orphaned Resources & Dependency Trees
+In AWS, deleting an orchestration service (like an ECS Service) does not cascade to delete surrounding infrastructure (IAM execution roles, CloudWatch log groups, security groups, task definitions). SREs must actively understand and track this dependency tree to prevent unmanaged "zombie" resources from accumulating, causing security sprawl, and leaking monthly budget. Leveraging this decoupled architecture allowed us to safely reuse existing IAM roles, security groups, and task definitions during service redeployment.
+
+
 
