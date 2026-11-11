@@ -102,3 +102,4 @@ This phase was a masterclass in cloud networking and IAM troubleshooting. The de
 - **Circuit Breaker Mechanics:** ECS circuit breakers require a healthy previous deployment to roll back to. If you use `:latest` tags, the "rollback" will just pull the exact same broken image. Immutable tags are required for reliable rollbacks.
 - **SRE Persistence:** Diagnosing network timeouts requires systematically eliminating variables (NACLs, Subnets, Route Tables, SGs) until the true culprit is found.
 - **Orphaned Resources & Dependency Trees:** In AWS, deleting a service (like ECS) does not cascade to delete the surrounding infrastructure (IAM roles, log groups, security groups). As an SRE, you must understand this dependency tree to prevent "zombie" resources from silently accumulating and costing money. For this project, we reused the IAM roles, security groups, and task definitions to save time and reduce sprawl.
+
