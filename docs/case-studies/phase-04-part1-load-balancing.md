@@ -97,3 +97,4 @@ This phase was dominated by AWS Console UI quirks, port mismatches, and Security
 - **IAM & Security Group Handshakes:** The ALB and ECS tasks require reciprocal security group rules (ALB SG allows outbound to ECS SG, ECS SG allows inbound on application port from ALB SG).
 - **Task Definition Immutability:** Task Definitions cannot be modified in-place. A single port typo requires authoring a new revision and updating or redeploying the ECS Service.
 - **The Cost of Multi-Region Architecture:** Deploying across regions is technically straightforward but substantially increases baseline cost due to cross-region data transfer fees and duplicate hourly ALB provisioning charges.
+
