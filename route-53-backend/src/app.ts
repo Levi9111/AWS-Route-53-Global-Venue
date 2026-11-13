@@ -21,10 +21,24 @@ app.disable('x-powered-by');
 app.set('trust proxy', 1);
 
 // ── Global Middlewares ────────────────────────────────────────────────────────
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }),
+);
 app.use(
   cors({
-    origin: config.cors_origin,
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        config.cors_origin.includes('*') ||
+        config.cors_origin.includes(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     credentials: true,
   }),
 );
