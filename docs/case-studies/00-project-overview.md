@@ -41,9 +41,9 @@
                        └────────────────────────┘
 ```
 
-### Route 53 Multi-Region Strategies
-1. **Health Check Probing:** Route 53 probes `/health` on port 5000 in both `us-east-1` and `eu-west-1`. If an availability zone or region degrades, Route 53 automatically fails over traffic to the healthy region within 30 seconds.
-2. **Latency-Based & Geolocation Routing:** Route 53 maps European requests to `eu-west-1` and North American requests to `us-east-1` to minimize round-trip latencies.
+### Route 53 Multi-Region Strategies (Phase 04 Part 2)
+1. **Health Check Probing:** Independent Route 53 health checks probe `/health` on port 5000 in both `us-east-1` and `eu-west-1`. If an availability zone or region degrades, Route 53 automatically withdraws the unhealthy record and routes traffic to the healthy region.
+2. **Latency-Based & Private Hosted Zone Routing:** Uses `internal.venuefinder.com` associated across both US and EU VPCs (`api.internal.venuefinder.com`), directing clients to the lowest-latency ALB. See full documentation in [Phase 04 (Part 2): Route 53 Case Study](./phase-04-part2-route53.md).
 3. **Stateless Backend Nodes:** Stateless Express services running on AWS ECS Fargate allow horizontal autoscaling without session stickiness or localized file persistence.
 
 ### Database Tier Persistence Architecture (Phase 02)
@@ -112,6 +112,8 @@ Both services feature non-root, multi-stage Alpine Dockerfiles:
 | **US Target Group 0 Targets Block** | ECS Security Group lacked inbound rule from ALB SG on port 5000. | Added reciprocal rule in ECS SG allowing ALB SG on port 5000. | [Phase 04 (Part 1)](./phase-04-part1-load-balancing.md) |
 | **Container Port Typo (`500` vs `5000`)** | Typo in EU Task Definition container port mapping prevented ALB registration. | Created Task Definition revision `venuefinder-backend-eu:3` with port 5000. | [Phase 04 (Part 1)](./phase-04-part1-load-balancing.md) |
 | **EU Target Group Registration Unattached** | Service update did not save Target Group load balancer association. | Explicitly attached Target Group in service update workflow. | [Phase 04 (Part 1)](./phase-04-part1-load-balancing.md) |
+| **Route 53 Console Health Check UI Bug** | AWS Console failed to render Port and Path fields for EU health check. | Bypassed Console UI and created health check via AWS CLI JSON payload. | [Phase 04 (Part 2)](./phase-04-part2-route53.md) |
+| **Inverted Health Check Trap** | Misclick set `Inverted: Yes` on EU health check, reversing failover logic. | Audited check config, deleted flawed check, and recreated with `"Inverted": false`. | [Phase 04 (Part 2)](./phase-04-part2-route53.md) |
 
 ### Key SRE Principle: Managing Orphaned Resources & Dependency Trees
 In AWS, deleting an orchestration service (like an ECS Service) does not cascade to delete surrounding infrastructure (IAM execution roles, CloudWatch log groups, security groups, task definitions). SREs must actively understand and track this dependency tree to prevent unmanaged "zombie" resources from accumulating, causing security sprawl, and leaking monthly budget. Leveraging this decoupled architecture allowed us to safely reuse existing IAM roles, security groups, and task definitions during service redeployment.

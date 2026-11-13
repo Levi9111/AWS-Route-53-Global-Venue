@@ -7,6 +7,7 @@ This directory contains the immutable record of key architectural decisions made
 | [ADR-0001](./0001-multi-region-route53-architecture.md) | Multi-Region Active Routing Architecture with Route 53 | Accepted | 2026-11-09 | Cloud Infrastructure |
 | [ADR-0002](./0002-dedicated-ebs-volume-mongodb.md) | Dedicated 10 GiB EBS Volume for MongoDB Data | Accepted | 2026-11-09 | Database Persistence (Phase 02) |
 | [ADR-0003](./0003-image-naming-convention-ecr.md) | Container Image Naming Convention and Tagging for ECR | Accepted | 2026-11-11 | Containerization & Registry (Phase 03) |
+| [ADR-0004](./0004-route53-private-hosted-zone-latency-routing.md) | Route 53 Private Hosted Zone, Latency Routing & Independent Health Checks | Accepted | 2026-11-13 | Global DNS & Routing (Phase 04 Part 2) |
 
 ---
 
