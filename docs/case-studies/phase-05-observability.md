@@ -77,3 +77,4 @@ CloudWatch is notoriously clunky, and this phase required bypassing several UI l
 - **CloudWatch Metric Namespaces:** Learned the critical difference between `AWS/ECS` (standard) and `ECS/ContainerInsights` (enhanced) namespaces, and the importance of graphing by `ServiceName` rather than ephemeral `TaskId`.
 - **JSON Source as a Fallback:** The CloudWatch UI is often buggy. Knowing how to construct and paste raw JSON queries via the "Source" tab is a mandatory CloudWatch skill.
 - **The Power of Runbooks:** Writing a descriptive, Markdown-formatted alarm description turns an alert from a panic-inducing notification into an actionable runbook.
+
