@@ -23,3 +23,4 @@ With stateless backend services deployed in both `us-east-1` (Virginia) and `eu-
   - Zero domain registration overhead.
 - **Negative / Considerations:**
   - Resolution of `internal.venuefinder.com` is scoped to the associated VPCs (requires VPN/Bastion/VPC-bound clients, or swapping to a Public Hosted Zone with a custom domain for public internet clients).
+

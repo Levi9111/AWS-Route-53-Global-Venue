@@ -142,3 +142,4 @@ See formal record: [ADR-0004: Route 53 Private Hosted Zone & Latency-Based Routi
 - **DNS is Application Control Plane:** Route 53 is not just static name resolution—combined with deep `/health` checks (which verify MongoDB `admin().ping()`), DNS becomes an active global traffic controller.
 - **Blast Radius Isolation in Health Checks:** Never share a single health check across independent regional records; shared checks create a single point of failure that defeats multi-region redundancy.
 - **CLI Over Console:** When the AWS Console UI misbehaves, dropping directly to the AWS CLI (`aws route53 create-health-check`) is faster, repeatable, and scriptable.
+
