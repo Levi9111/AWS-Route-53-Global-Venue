@@ -103,3 +103,4 @@ Getting the proxy to work felt like solving a mystery. Here are the hurdles we f
 2.  **CloudFront is Powerful:** CloudFront isn't just for caching static images. By using Origins and Behaviors, it can act as a secure Reverse Proxy to route traffic to multiple different backends.
 3.  **SPA Routing is a Global Problem:** Because Single Page Apps don't have physical files for every route (`/login`, `/dashboard`), you *must* configure your web server to route all 404 errors back to `index.html`.
 4.  **The Invalidation Button:** CloudFront caching is aggressive. Whenever you change a behavior or upload a new S3 file, you **must** create an Invalidation to see the changes.
+
