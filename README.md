@@ -1,6 +1,22 @@
-# Global VenueFinder — Multi-Region Event Space Marketplace on AWS Route 53
+# Global VenueFinder — Multi-Region Event Space Marketplace on AWS
 
-An "Airbnb for Event Spaces" full-stack monorepo engineered for stateless multi-region deployment on **AWS ECS Fargate (`us-east-1` & `eu-west-1`)** behind **Amazon Route 53** Latency-Based Routing, independent active health checks, and a persistent MongoDB tier.
+> **Live Frontend (CloudFront HTTPS + S3 OAC + `/api/*` Reverse Proxy):** `https://d46vswlv62ic2.cloudfront.net`
+
+An "Airbnb for Event Spaces" full-stack monorepo engineered for stateless multi-region deployment on **AWS ECS Fargate (`us-east-1` & `eu-west-1`)** behind **Amazon Route 53** Latency-Based Routing, **Amazon CloudFront** (serving a private S3 static frontend and terminating HTTPS for `/api/*` via an ALB reverse proxy), **CloudWatch + SNS** observability, and a persistent MongoDB tier.
+
+```mermaid
+flowchart TB
+    User["Global Users (HTTPS)"] --> CF["Amazon CloudFront<br/>d46vswlv62ic2.cloudfront.net"]
+    CF -->|"Default (*) — Static Assets"| S3["Private S3 Bucket (OAC)<br/>Next.js Static Export (out/)"]
+    CF -->|"/api/* — HTTPS Reverse Proxy<br/>(CachingDisabled, AllViewer)"| US_ALB["us-east-1 ALB (HTTP:80)"]
+    Clients["VPC Clients"] -->|"DNS: api.internal.venuefinder.com"| R53["Amazon Route 53<br/>Private Hosted Zone<br/>Latency-Based Routing"]
+    R53 -->|"US Lowest Latency"| US_ALB
+    R53 -->|"EU Lowest Latency"| EU_ALB["eu-west-1 ALB (HTTP:80)"]
+    US_ALB --> US_ECS["ECS Fargate (us-east-1)"]
+    EU_ALB --> EU_ECS["ECS Fargate (eu-west-1)"]
+    US_ECS --> DB[("MongoDB 7 on EC2<br/>10 GiB Dedicated EBS")]
+    EU_ECS --> DB
+```
 
 ---
 
