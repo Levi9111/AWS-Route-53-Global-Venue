@@ -91,9 +91,10 @@ Getting the proxy to work felt like solving a mystery. Here are the hurdles we f
 - [x] **Venue Data Loaded:** The frontend successfully fetches and renders venue data from the backend API.
 - [x] **No Mixed Content Errors:** The browser console is clean.
 
-*📸 [Screenshot: 42-success-s3-frontend-uploaded.png]*
-*📸 [Screenshot: 43-success-cloudfront-created.png]*
-*📸 [Screenshot: 45-success-frontend-working.png (The fully loaded site!)]*
+![S3 Frontend Upload](../screenshots/42-success-s3-frontend-uploaded.png)
+![Frontend Static Build Output](../screenshots/42-success-frontend-build-output.png)
+![S3 403 Forbidden Before Default Root Object](../screenshots/42a-failure-s3-403-forbidden.png)
+![CloudFront API Routing Debug](../screenshots/cloudfront-api-fali.png)
 
 ---
 
