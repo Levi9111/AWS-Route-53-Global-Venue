@@ -43,6 +43,7 @@ flowchart LR
 | **Phase 3** | [phase-03-ecr-ecs.md](docs/case-studies/phase-03-ecr-ecs.md) | Private ECR, ECS Fargate `us-east-1`, IAM execution roles, & Security Group mismatch RCA |
 | **Phase 4 (Part 1)** | [phase-04-part1-load-balancing.md](docs/case-studies/phase-04-part1-load-balancing.md) | Dual-region ALBs (`us-east-1` & `eu-west-1`), Target Groups, & EU Fargate deployment |
 | **Phase 4 (Part 2)** | [phase-04-part2-route53.md](docs/case-studies/phase-04-part2-route53.md) | **Route 53 Private Hosted Zone, Latency-Based Routing, Independent Health Checks, & CLI Fixes** |
+| **Phase 5** | [phase-05-observability.md](docs/case-studies/phase-05-observability.md) | CloudWatch Alarms (`5XX`), Container Insights Dashboard, SNS Alerting, & Namespace RCA |
 | **ADRs** | [docs/decisions/README.md](docs/decisions/README.md) | Architecture Decision Records (Route 53, EBS persistence, ECR naming, Private DNS) |
 
 ---
