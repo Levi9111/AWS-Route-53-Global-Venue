@@ -58,3 +58,6 @@ jobs:
       - name: TypeScript Verification
         run: npx tsc --noEmit
 
+      - name: Build Next.js Static Export
+        run: npm run build
+
