@@ -33,40 +33,13 @@ export function Navbar() {
             href="/"
             className="flex items-center gap-3 group focus:outline-none select-none"
           >
-            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a1a1f] to-[#0e0e11] flex items-center justify-center shadow-md ring-1 ring-[#D9AE54]/40 group-hover:ring-[#D9AE54]/80 group-hover:scale-105 transition-all duration-200 shrink-0">
-              <svg
-                viewBox="0 0 32 32"
-                fill="none"
-                className="w-5 h-5"
-                aria-hidden="true"
-              >
-                <defs>
-                  <linearGradient id="vfGold" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#f3d796" />
-                    <stop offset="50%" stopColor="#d9ae54" />
-                    <stop offset="100%" stopColor="#b88c32" />
-                  </linearGradient>
-                </defs>
-                {/* Architectural Arch */}
-                <path
-                  d="M7 25V14a9 9 0 0 1 18 0v11"
-                  stroke="url(#vfGold)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                {/* Inner Pillar / Horizon */}
-                <path
-                  d="M5 25h22"
-                  stroke="url(#vfGold)"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                />
-                {/* Route 53 Compass / Meridian Point */}
-                <path
-                  d="M16 10l2.2 4.8L23 17l-4.8 2.2L16 24l-2.2-4.8L9 17l4.8-2.2L16 10z"
-                  fill="url(#vfGold)"
-                />
-              </svg>
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-md ring-1 ring-[#D9AE54]/40 group-hover:ring-[#D9AE54]/80 group-hover:scale-105 transition-all duration-200 shrink-0 bg-[#0b0b0c]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-2d.jpg"
+                alt="Global VenueFinder Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-serif font-bold text-base tracking-tight text-zinc-100 leading-tight">

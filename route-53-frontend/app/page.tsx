@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { venuesApi } from '../api/venues';
 import { Venue } from '../api/types';
-import { dollarsToCents } from '../api/client';
+import { dollarsToCents, formatCents } from '../api/client';
 import { VenueCard } from '../components/VenueCard';
 import { VenueMap } from '../components/VenueMap';
 import { VenueGridSkeleton } from '../components/Skeletons';
@@ -30,6 +30,29 @@ const QUICK_CITIES = [
   'Tokyo',
 ];
 
+const EVENT_USE_CASES = [
+  {
+    label: 'Board Offsite',
+    capacity: '20',
+    amenities: ['WiFi', 'Video Conferencing', 'Whiteboards'],
+  },
+  {
+    label: 'Tech Summit',
+    capacity: '150',
+    amenities: ['WiFi', 'Projector', 'Sound System', 'Stage'],
+  },
+  {
+    label: 'Product Launch',
+    capacity: '80',
+    amenities: ['WiFi', 'Sound System', 'Catering Kitchen'],
+  },
+  {
+    label: 'Rooftop Gala',
+    capacity: '100',
+    amenities: ['Sound System', 'Rooftop Access', 'Catering Kitchen'],
+  },
+];
+
 type ViewMode = 'bento' | 'split' | 'specs';
 type SortMode = 'featured' | 'price-asc' | 'price-desc' | 'capacity-desc';
 
@@ -42,6 +65,8 @@ export default function HomePage() {
   const [sortBy, setSortBy] = useState<SortMode>('featured');
   const [savedOnly, setSavedOnly] = useState<boolean>(false);
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [compareModalOpen, setCompareModalOpen] = useState<boolean>(false);
   const [apiLatencyMs, setApiLatencyMs] = useState<number | null>(null);
 
   // Filter states
@@ -188,6 +213,41 @@ export default function HomePage() {
         : [...prev, amenity],
     );
   };
+
+  const applyUseCase = (preset: (typeof EVENT_USE_CASES)[number]) => {
+    setCapacity(preset.capacity);
+    setSelectedAmenities(preset.amenities);
+    setPage(1);
+    setLoading(true);
+    venuesApi
+      .list({
+        city: city.trim() || undefined,
+        capacity: Number(preset.capacity),
+        amenities: preset.amenities,
+        page: 1,
+        limit,
+      })
+      .then((res) => {
+        setVenues(res.data || []);
+        setTotal(res.total || 0);
+        setSelectedVenue(res.data?.[0] || null);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
+
+  const toggleCompare = (venueId: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(venueId)) return prev.filter((id) => id !== venueId);
+      if (prev.length >= 3) return [...prev.slice(1), venueId];
+      return [...prev, venueId];
+    });
+  };
+
+  const compareVenues = useMemo(
+    () => venues.filter((v) => compareIds.includes(v._id)),
+    [venues, compareIds],
+  );
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
@@ -396,6 +456,23 @@ export default function HomePage() {
             </div>
           </form>
 
+          {/* Real-World Event Use Cases */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 mr-1">
+              Use Cases:
+            </span>
+            {EVENT_USE_CASES.map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => applyUseCase(preset)}
+                className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#121215] hover:bg-[#1a1a1f] text-zinc-300 hover:text-[#D9AE54] border border-white/[0.07] hover:border-[#D9AE54]/40 transition-all cursor-pointer"
+              >
+                {preset.label} ({preset.capacity}+)
+              </button>
+            ))}
+          </div>
+
           {/* Quick City Filters */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-b border-white/[0.06] pb-3">
             <div className="flex flex-wrap items-center gap-1 sm:gap-2">
@@ -561,6 +638,8 @@ export default function HomePage() {
                     variant={idx === 0 ? 'featured' : 'standard'}
                     isSelected={selectedVenue?._id === venue._id}
                     onSelect={setSelectedVenue}
+                    isCompared={compareIds.includes(venue._id)}
+                    onToggleCompare={toggleCompare}
                   />
                 ))}
               </div>
@@ -687,6 +766,99 @@ export default function HomePage() {
           </>
         )}
       </div>
+
+      {/* Floating Compare Tray */}
+      {compareVenues.length > 0 && (
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 glass-luxury rounded-full px-5 py-3 flex items-center gap-4 border border-[#D9AE54]/40">
+          <span className="text-xs font-mono text-zinc-200">
+            <strong className="text-[#D9AE54]">{compareVenues.length}</strong> / 3 spaces selected
+          </span>
+          <button
+            type="button"
+            onClick={() => setCompareModalOpen(true)}
+            className="btn-volumetric-gold px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer"
+          >
+            Compare Now
+          </button>
+          <button
+            type="button"
+            onClick={() => setCompareIds([])}
+            className="text-xs text-zinc-400 hover:text-zinc-200 cursor-pointer"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
+      {/* Side-by-Side Comparison Modal */}
+      {compareModalOpen && compareVenues.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+          onClick={() => setCompareModalOpen(false)}
+        >
+          <div
+            className="surface-elevated rounded-3xl max-w-4xl w-full p-6 sm:p-8 space-y-6 border border-white/10 max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+              <div>
+                <h3 className="font-serif text-2xl font-bold text-zinc-100">
+                  Side-by-Side Venue Comparison
+                </h3>
+                <p className="text-xs font-mono text-zinc-400 mt-0.5">
+                  Includes estimated 4-hour event subtotal
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCompareModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 flex items-center justify-center cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {compareVenues.map((v) => (
+                <div key={v._id} className="p-4 rounded-2xl bg-[#09090b]/80 border border-white/[0.06] space-y-3 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#D9AE54]">
+                      {v.city}, {v.country}
+                    </span>
+                    <h4 className="font-serif text-lg font-bold text-zinc-100 leading-snug">
+                      {v.title}
+                    </h4>
+                    <div className="pt-2 border-t border-white/[0.05] space-y-1.5 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">Hourly Rate</span>
+                        <span className="font-bold text-zinc-100">{formatCents(v.pricePerHour)}/hr</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">Est. 4-hr Event</span>
+                        <span className="font-bold text-[#D9AE54]">{formatCents(v.pricePerHour * 4)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">Max Capacity</span>
+                        <span className="font-semibold text-zinc-200">{v.capacity} guests</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-zinc-500">Booking</span>
+                        <span className="font-semibold text-zinc-200">{v.instantBook ? 'Instant Lock' : 'Concierge'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    href={`/book/${v._id}`}
+                    className="btn-volumetric-gold w-full py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-center block mt-3"
+                  >
+                    Reserve Space
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -10,6 +10,8 @@ interface VenueCardProps {
   isSelected?: boolean;
   onSelect?: (venue: Venue) => void;
   variant?: 'standard' | 'featured' | 'compact';
+  isCompared?: boolean;
+  onToggleCompare?: (venueId: string) => void;
 }
 
 const FALLBACK_PHOTO =
@@ -67,6 +69,8 @@ export function VenueCard({
   isSelected,
   onSelect,
   variant = 'standard',
+  isCompared = false,
+  onToggleCompare,
 }: VenueCardProps) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -261,12 +265,31 @@ export function VenueCard({
               <span className="text-xs text-zinc-500"> / hour</span>
             </div>
 
-            <Link
-              href={`/book/${venue._id}`}
-              className="btn-volumetric-gold px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider inline-block text-center"
-            >
-              Reserve Space
-            </Link>
+            <div className="flex items-center gap-2">
+              {onToggleCompare && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onToggleCompare(venue._id);
+                  }}
+                  className={`px-3 py-2.5 rounded-xl text-[11px] font-mono font-bold border transition-all cursor-pointer ${
+                    isCompared
+                      ? 'bg-[#D9AE54]/20 text-[#D9AE54] border-[#D9AE54]/50'
+                      : 'bg-[#141417] text-zinc-400 border-white/10 hover:text-zinc-200'
+                  }`}
+                >
+                  {isCompared ? '✓ Comparing' : '+ Compare'}
+                </button>
+              )}
+              <Link
+                href={`/book/${venue._id}`}
+                className="btn-volumetric-gold px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider inline-block text-center"
+              >
+                Reserve Space
+              </Link>
+            </div>
           </div>
         </div>
       </div>
