@@ -255,13 +255,13 @@ export default function HomePage() {
     <div className="space-y-16">
       {/* Editorial Luxury Hero Section */}
       <section className="relative border-b border-white/[0.06] bg-[#0c0c0e] py-16 sm:py-24 overflow-hidden">
-        {/* Architectural Blueprint Grid + Subtle Ambient Gold Glow */}
+        {/* Architectural Blueprint Grid + Animated Ambient Gold Glow */}
         <div className="absolute inset-0 bg-blueprint-grid pointer-events-none" />
         <div
-          className="absolute inset-0 pointer-events-none opacity-60"
+          className="absolute inset-0 pointer-events-none animate-ambient-drift"
           style={{
             background:
-              'radial-gradient(circle 800px at 15% -10%, rgba(217, 174, 84, 0.11) 0%, transparent 75%), radial-gradient(circle 600px at 88% 20%, rgba(217, 174, 84, 0.05) 0%, transparent 70%)',
+              'radial-gradient(circle 800px at 15% -10%, rgba(217, 174, 84, 0.14) 0%, transparent 75%), radial-gradient(circle 600px at 88% 20%, rgba(217, 174, 84, 0.08) 0%, transparent 70%)',
           }}
         />
 
@@ -632,15 +632,20 @@ export default function HomePage() {
             {viewMode === 'bento' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {displayedVenues.map((venue, idx) => (
-                  <VenueCard
+                  <div
                     key={venue._id}
-                    venue={venue}
-                    variant={idx === 0 ? 'featured' : 'standard'}
-                    isSelected={selectedVenue?._id === venue._id}
-                    onSelect={setSelectedVenue}
-                    isCompared={compareIds.includes(venue._id)}
-                    onToggleCompare={toggleCompare}
-                  />
+                    className={`animate-fade-up ${idx === 0 ? 'lg:col-span-2' : ''}`}
+                    style={{ animationDelay: `${Math.min(idx * 80, 400)}ms` }}
+                  >
+                    <VenueCard
+                      venue={venue}
+                      variant={idx === 0 ? 'featured' : 'standard'}
+                      isSelected={selectedVenue?._id === venue._id}
+                      onSelect={setSelectedVenue}
+                      isCompared={compareIds.includes(venue._id)}
+                      onToggleCompare={toggleCompare}
+                    />
+                  </div>
                 ))}
               </div>
             )}

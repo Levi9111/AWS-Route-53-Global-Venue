@@ -55,8 +55,10 @@
     0 0 14px rgba(217, 174, 84, 0.25);
 }
 
-/* Dimensional Physical Button (Volume, top highlight bevel, click depression) */
+/* Dimensional Physical Button (Volume, top highlight bevel, click depression, sheen) */
 .btn-volumetric-gold {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(180deg, #d9ae54 0%, #c9a24c 100%);
   color: #0b0b0c;
   box-shadow:
@@ -64,7 +66,23 @@
     0 4px 12px rgba(201, 162, 76, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-volumetric-gold::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  transition: left 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-volumetric-gold:hover::after {
+  left: 140%;
 }
 
 .btn-volumetric-gold:hover {
@@ -126,11 +144,40 @@
   mask-image: radial-gradient(ellipse 85% 75% at 50% 15%, #000 35%, transparent 100%);
 }
 
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .text-gold-gradient {
-  background: linear-gradient(135deg, #f3d796 0%, #d9ae54 45%, #b88c32 100%);
+  background: linear-gradient(110deg, #d9ae54 0%, #f8e5b4 35%, #d9ae54 65%, #b88c32 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: goldShimmer 6s ease-in-out infinite;
+}
+
+@keyframes ambientDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.06);
+    opacity: 0.85;
+  }
+}
+
+.animate-ambient-drift {
+  animation: ambientDrift 10s ease-in-out infinite;
 }
 
 .glass-luxury {
@@ -145,16 +192,16 @@
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(18px) scale(0.985);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .animate-fade-up {
-  animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 body {

@@ -9,13 +9,9 @@ export const metadata: Metadata = {
   description:
     'Discover, inspect, and reserve world-class architectural venues, loft galleries, and executive pavilions across major international metropolises.',
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon.png', type: 'image/png' },
-      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
-      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
-    ],
-    apple: [{ url: '/icon-192.png', sizes: '192x192' }],
+    icon: [{ url: '/logo-2d.jpg', type: 'image/jpeg' }],
+    shortcut: [{ url: '/logo-2d.jpg', type: 'image/jpeg' }],
+    apple: [{ url: '/logo-2d.jpg' }],
   },
 };
 
@@ -45,9 +41,9 @@ export default function RootLayout({
                   <div className="flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/icon-192.png"
-                      alt="Logo"
-                      className="w-8 h-8 rounded-xl object-cover shadow-xs"
+                      src="/logo-2d.jpg"
+                      alt="Global VenueFinder Logo"
+                      className="w-9 h-9 rounded-xl object-cover shadow-md ring-1 ring-[#D9AE54]/40"
                     />
                     <span className="font-serif font-bold text-lg tracking-tight text-zinc-900 dark:text-white">
                       Global VenueFinder
