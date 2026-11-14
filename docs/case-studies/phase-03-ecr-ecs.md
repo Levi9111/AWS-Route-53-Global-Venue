@@ -37,7 +37,9 @@ This phase was a masterclass in cloud networking and IAM troubleshooting. The de
 - **Symptom:** Running `docker login` to ECR resulted in `AccessDeniedException: User ... is not authorized to perform: ecr:GetAuthorizationToken`.
 - **Root Cause:** The active IAM user (`pipeline-dev`) lacked the necessary ECR permissions.
 - **Fix:** Attached the `AmazonEC2ContainerRegistryFullAccess` policy to the IAM user in the console.
-- **Evidence:** `docs/screenshots/15a-failure-ecr-access-denied.png`, `docs/screenshots/AccessDeniedException.png`.
+
+![ECR Access Denied Error](../screenshots/15a-failure-ecr-access-denied.png)
+![IAM AccessDeniedException](../screenshots/AccessDeniedException.png)
 
 ### Failure 2: Security Group UI Constraints
 - **Symptom:** Attempting to add the ECS Security Group as a source in the MongoDB Security Group returned: *"CIDR block, a security group ID or a prefix list has to be specified"* and *"You may not specify a referenced group id for an existing IPv4 CIDR rule."*
@@ -58,7 +60,10 @@ This phase was a masterclass in cloud networking and IAM troubleshooting. The de
   4. Suspected AWS Hairpin NAT limits, so switched the `MONGO_URI` from the EC2 Public IP to the **Private IP (`172.31.31.52`)**.
 - **The Ultimate Root Cause:** **Security Group Mismatch.** During Phase 2, we created `venuefinder-mongo-sg`. However, when the EC2 instance was launched, it was accidentally attached to the default `launch-wizard-1` security group. We were meticulously adding the ECS Security Group rule to `venuefinder-mongo-sg`, but the actual server was using `launch-wizard-1`. The real database firewall was silently dropping the traffic.
 - **Fix:** Went to the EC2 instance, identified the *actually attached* security group (`launch-wizard-1`), and added an inbound rule for port `27017` allowing the ECS Security Group (`sg-0c6265786e10a5ce6`). Forced a new ECS deployment. The connection was instantaneous.
-- **Evidence:** `docs/screenshots/19c-fix-sg-attached-success.png`, `docs/screenshots/20a-failure-ecs-task-stopped.png`, `docs/screenshots/20a-failure-ecs-task-cloudFormation-logs.png`.
+
+![ECS Task Stopped Circuit Breaker](../screenshots/20a-failure-ecs-task-stopped.png)
+![ECS CloudWatch Error Logs](../screenshots/20a-failure-ecs-task-cloudFormation-logs.png)
+![Security Group Fix Attached](../screenshots/19c-fix-sg-attached-success.png)
 
 ---
 
@@ -75,15 +80,20 @@ This phase was a masterclass in cloud networking and IAM troubleshooting. The de
 
 ## ✅ Verification & Evidence
 
-- [x] **ECR Push:** Image successfully tagged and pushed to `199720489393.dkr.ecr.us-east-1.amazonaws.com/venuefinder-backend:latest` (`docs/screenshots/16-ecr-image-pushed.png`).
-- [x] **ECS Cluster Created:** Fargate cluster `venuefinder-cluster-v2` active in `us-east-1` (`docs/screenshots/17-success-ecs-cluster-created.png`).
-- [x] **Task Definition Configured:** Port 5000 and container resources verified (`docs/screenshots/18-task-definition-created.png`).
+- [x] **ECR Repository & Push:** Image tagged and pushed to `199720489393.dkr.ecr.us-east-1.amazonaws.com/venuefinder-backend:latest`.
+- [x] **ECS Cluster Created:** Fargate cluster `venuefinder-cluster-v2` active in `us-east-1`.
+- [x] **Task Definition Configured:** Port 5000 and container resources verified.
 - [x] **ECS Service Status:** Service reaches `1/1` running tasks without circuit breaker trip.
 - [x] **CloudWatch Logs:** Logs clearly confirm live MongoDB connectivity and server bootstrap:
   ```json
   {"level": "INFO", "message": "Connected to MongoDB"}
   {"level": "INFO", "message": "Server running on http://localhost:5000"}
   ```
+
+![ECR Repository Created](../screenshots/15-ecr-repo-created.png)
+![ECR Image Pushed](../screenshots/16-ecr-image-pushed.png)
+![ECS Cluster Created](../screenshots/17-success-ecs-cluster-created.png)
+![ECS Task Definition Created](../screenshots/18-task-definition-created.png)
 
 ---
 

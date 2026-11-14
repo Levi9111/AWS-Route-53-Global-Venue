@@ -71,16 +71,30 @@ This phase was dominated by AWS Console UI quirks, port mismatches, and Security
 
 ## ✅ Verification & Evidence
 
-- [x] **Target Group Registration:** Target groups registered healthy containers across both regions (`docs/screenshots/29-alb-target-group-created.png`, `docs/screenshots/31-success-target-group-healthy.png`).
-- [x] **ALB Provisioning:** Verified public DNS entrypoints for both regional balancers (`docs/screenshots/30-alb-created.png`).
+- [x] **Target Group Registration:** Target groups registered healthy containers across both regions:
+
+![ALB Target Group Created](../screenshots/29-alb-target-group-created.png)
+![Target Group Healthy](../screenshots/31-success-target-group-healthy.png)
+
+- [x] **ALB Provisioning:** Verified public DNS entrypoints for both regional balancers:
+
+![ALB Created](../screenshots/30-alb-created.png)
+
 - [x] **US ALB Health Check:** Hitting the US ALB DNS name via a browser at `/health` returned HTTP 200:
   ```json
   {"status": "ok", "database": "connected", "uptime": 537.35}
   ```
-  *Evidence:* `docs/screenshots/32-success-alb-health-endpoint.png`.
-- [x] **EU ECS Connection:** CloudWatch logs in Ireland confirmed the backend successfully connected to the Virginia MongoDB instance over the public internet (`docs/screenshots/33-success-eu-ecs-logs.png`).
+
+![US ALB Health Endpoint Response](../screenshots/32-success-alb-health-endpoint.png)
+
+- [x] **EU ECS Connection:** CloudWatch logs in Ireland confirmed the backend successfully connected to the Virginia MongoDB instance over the public internet:
+
+![EU ECS CloudWatch Logs](../screenshots/33-success-eu-ecs-logs.png)
+
 - [x] **EU ECS Service Health:** The service reached `1 running, 0 pending` and `Deployment status: Success` with revision `venuefinder-backend-eu:3`:
-  *Evidence:* `docs/screenshots/35-success-eu-ecs-service-running.png`, `docs/screenshots/35-success-eu-ecs-service-running-healthy.png`.
+
+![EU ECS Service Running](../screenshots/35-success-eu-ecs-service-running.png)
+![EU ECS Service Healthy](../screenshots/35-success-eu-ecs-service-running-healthy.png)
 
 ---
 

@@ -60,9 +60,17 @@ CloudWatch is notoriously clunky, and this phase required bypassing several UI l
 
 ## ✅ Verification & Evidence
 
-- [x] **SNS Subscription:** Email received and confirmed (`docs/screenshots/39-success-sns-topic-created.png`).
-- [x] **Alarm Created:** `venuefinder-us-5xx-alarm` is active and in the `Insufficient Data` state (expected, as no errors have occurred) (`docs/screenshots/40-success-cloudwatch-5xx-alarm.png`).
-- [x] **Dashboard Live:** The `venuefinder-global-ops` dashboard shows live `TaskCpuUtilization` (blue) and `MemoryUtilized` (orange) graphs for the US region (`docs/screenshots/41-success-cloudwatch-dashboard.png`).
+- [x] **SNS Subscription:** Email received and confirmed:
+
+![SNS Topic & Subscription Created](../screenshots/39-success-sns-topic-created.png)
+
+- [x] **Alarm Created:** `venuefinder-us-5xx-alarm` is active and in the `Insufficient Data` state (expected, as no errors have occurred):
+
+![CloudWatch 5XX Alarm](../screenshots/40-success-cloudwatch-5xx-alarm.png)
+
+- [x] **Dashboard Live:** The `venuefinder-global-ops` dashboard shows live `TaskCpuUtilization` (blue) and `MemoryUtilized` (orange) graphs for the US region:
+
+![CloudWatch Global Ops Dashboard](../screenshots/41-success-cloudwatch-dashboard.png)
 
 ---
 

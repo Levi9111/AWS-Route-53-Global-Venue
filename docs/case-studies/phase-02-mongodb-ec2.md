@@ -16,9 +16,15 @@ This phase establishes the data layer for Global VenueFinder. To support the two
 - [x] Create a scoped application user (`vfapp`) and verify external connectivity from a local machine.
 
 ## 🏗️ Architecture Position
-This database sits behind a tightly restricted Security Group. It will later accept connections exclusively from the ECS Fargate tasks in both `us-east-1` and `eu-west-1`. 
+This database sits behind a tightly restricted Security Group. It will later accept connections exclusively from the ECS Fargate tasks in both `us-east-1` and `eu-west-1`.
 
-*📸 [Screenshot: Architecture Diagram with Phase 2 highlighted]*
+> **Cost Guardrail & CLI Setup:**
+>
+> ![AWS Budget Alarm](../screenshots/00-budget-alarm.png)
+> *Figure 1 — AWS Budget alarm configured to protect against unexpected spend.*
+>
+> ![AWS CLI Configured](../screenshots/03-aws-cli-configured.png)
+> *Figure 2 — AWS CLI verified for `us-east-1` operations.*
 
 ---
 
@@ -86,7 +92,20 @@ This database sits behind a tightly restricted Security Group. It will later acc
 - [x] **Internal Auth Test:** Connected locally inside EC2 via `mongosh` using the scoped `vfapp` user.
 - [x] **External Network Test:** Connected from a local Fedora machine over the public internet using Docker and `mongosh`, proving the Security Group and MongoDB auth are correctly configured.
 
-*📸 [Screenshot: Terminal showing successful external connection from Fedora]*
+### Visual Evidence
+
+**Security Group & Compute**
+![MongoDB Security Group Inbound Rules](../screenshots/07-mongo-sg-inbound-rules.png)
+![EC2 Instance Running](../screenshots/08-ec2-instance-running.png)
+
+**EBS Persistent Volume**
+![EBS Volume Attached](../screenshots/09-ebs-volume-attached.png)
+![EBS Volume Mounted on /data](../screenshots/11-volume-mounted.png)
+
+**Docker & MongoDB Verification**
+![Docker Service Running](../screenshots/12-docker-running.png)
+![MongoDB Container Running](../screenshots/13-mongo-running.png)
+![External MongoDB Connection Verified](../screenshots/14-local-mongo-connection.png)
 
 ---
 
