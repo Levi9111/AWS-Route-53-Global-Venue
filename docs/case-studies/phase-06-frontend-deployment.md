@@ -1,107 +1,111 @@
-# Phase 6 (Part 1): Global Frontend Hosting & The HTTPS Proxy War
+# Phase 6: Frontend Deployment, HTTPS Proxying & CI/CD
 
 **Status:** ✅ Complete
 **Dates:** November 13 – November 14, 2026
-**Time invested:** ~4 hours (mostly debugging routing and caching)
-**Cost impact:** ~$1.00 / month (S3 storage + CloudFront data transfer)
+**Time invested:** ~6 hours (mostly debugging routing and CI/CD credentials)
+**Cost impact:** ~$1.50 / month (S3 Storage + CloudFront Data Transfer)
 
-## 📌 The Big Picture (Context)
-We had a globally distributed backend, but we needed a face for the application. The goal of this phase was to take our Next.js frontend, build it into static files, and serve it to users anywhere in the world with lightning speed and top-tier security. 
+## 📌 Context
+We had a globally distributed backend running on ECS, but it was invisible to the outside world. In this phase, we gave the application a face by deploying the Next.js frontend to Amazon S3 and serving it globally via Amazon CloudFront. 
 
-To do this, we used two AWS services:
-1.  **Amazon S3:** A digital warehouse to store our HTML, CSS, and JS files.
-2.  **Amazon CloudFront:** A Content Delivery Network (CDN). Think of it as a global network of delivery trucks that cache your website at edge locations (like New York, London, or Tokyo) so users don't have to wait for data to travel across the ocean.
-
-But this phase wasn't just about uploading files. We ran into a classic web security roadblock that required a clever architectural workaround.
+More importantly, we transitioned from manual deployments to a true **Site Reliability Engineering (SRE)** workflow by building two independent **CI/CD pipelines using GitHub Actions**. Now, every push to the `main` branch automatically deploys the frontend and backend.
 
 ---
 
 ## 🎯 Objectives
 - [x] Build the Next.js frontend with the correct production API URL.
-- [x] Create a private S3 bucket and upload the static build files.
-- [x] Create a CloudFront distribution with Origin Access Control (OAC) to keep the S3 bucket secure.
-- [x] Fix the "403 Access Denied" error by configuring the S3 Bucket Policy.
-- [x] Configure CloudFront Error Pages so Single Page App (SPA) routing works.
-- [x] Solve the "Mixed Content" HTTPS security block using CloudFront as a Reverse Proxy.
+- [x] Host the static files securely on Amazon S3.
+- [x] Serve the frontend globally via CloudFront with Origin Access Control (OAC).
+- [x] Solve Single Page Application (SPA) routing errors using CloudFront Custom Error Responses.
+- [x] Defeat the "Mixed Content" HTTPS block using CloudFront as a Reverse Proxy.
+- [x] Create a GitHub Actions pipeline for the Backend (ECR + ECS).
+- [x] Create a GitHub Actions pipeline for the Frontend (S3 + CloudFront).
 
 ---
 
 ## 🔨 The Implementation Journey (Step-by-Step)
 
-### 1. The Build Process
-Before we uploaded anything to AWS, we had to compile the Next.js application. 
-*   **The Catch:** Next.js "bakes" environment variables into the static files during the build. Your frontend needs to know where the backend API is.
-*   **The Action:** We ran `NEXT_PUBLIC_API_URL="https://..." npm run build`. This generated an `out` folder filled with all the static assets.
+### 1. The Secure S3 Warehouse
+We built the Next.js app locally using `npm run build`, which generated an `out` folder. We uploaded these files to an Amazon S3 bucket (`venuefinder-frontend-...`). 
+*   **Crucial Security Decision:** We turned "Block All Public Access" **ON**. We did not expose the S3 bucket to the internet. Instead, we forced all traffic to come through CloudFront using **Origin Access Control (OAC)**. This meant only CloudFront had the "keys" to read the files.
 
-### 2. Locking Down S3 (The Digital Warehouse)
-We created an S3 bucket named `venuefinder-frontend-199720489393...`. 
-*   **The Security Decision:** We kept **Block All Public Access** turned ON. In the early days of the web, people made S3 buckets public, which often led to data leaks. Instead, we decided to keep the bucket strictly private and force all traffic to come through CloudFront.
-*   **The Action:** We uploaded our `out` folder contents directly to the root of the S3 bucket.
+### 2. Setting Up CloudFront (The CDN)
+We created a CloudFront distribution to cache our website globally. This required us to set the **Default Root Object** to `index.html` so that visiting the base URL didn't show a directory error.
 
-### 3. Setting Up CloudFront (The Global Delivery Network)
-We created a CloudFront distribution to serve the S3 bucket. We used **Origin Access Control (OAC)**, which acts like a secure digital handshake between CloudFront and S3. 
-*   **The Result:** We copied the generated Bucket Policy into S3, granting *only* our specific CloudFront distribution permission to read the files.
+### 3. Solving the "Mixed Content" Boss Battle
+This was the hardest part of the phase. 
+Our CloudFront site loaded securely over **HTTPS** (`https://d46vswlv62ic2.cloudfront.net`). However, our ALB backend was running on **HTTP**. When the frontend tried to fetch data, the browser blocked it with a `Mixed Content` error to prevent man-in-the-middle attacks.
 
-### 4. The First Major Hurdle: "403 Access Denied"
-When we visited our CloudFront URL (`https://d46vswlv62ic2.cloudfront.net`), we were greeted by an ugly `403 Access Denied` XML error.
-*   **The Cause:** CloudFront was asking S3 for the root folder (`/`), but it didn't know to look for `index.html`. Because S3 didn't have a file literally named "root", it denied access.
-*   **The Fix:** We went into the CloudFront settings and set the **Default Root Object** to `index.html`. Suddenly, our beautiful homepage loaded!
+**The Solution:** We turned CloudFront into a **Reverse Proxy**. We added the ALB as a second "Origin" in CloudFront. Then, we created a behavior for `/api/*` that told CloudFront: *"If a user asks for anything starting with `/api/`, forward it internally to the ALB."* We rebuilt the frontend pointing to the CloudFront URL, and the browser security blocks vanished.
 
-### 5. The Second Major Hurdle: Single Page App (SPA) Routing
-When we clicked on a link like `/login` or `/register` and hit refresh, we got a 403 or 404 error.
-*   **The Cause:** CloudFront asked S3 for a file named `login`. But Next.js is a Single Page App—it only has one `index.html` file. S3 didn't find a file called `login`, so it errored out.
-*   **The Fix:** We configured **Custom Error Responses** in CloudFront. We told it: *"If you ever get a 403 or 404 error from S3, don't show an error page. Instead, serve `/index.html` with a 200 OK status."* This allowed the React router to take over and display the correct page.
+### 4. The CI/CD Pipelines (Automation)
+We created two separate GitHub Actions workflows:
+*   **`deploy.yml` (Backend):** Triggers when files in `route-53-backend` change. It logs into AWS, builds a new Docker image tagged with the Git commit hash, pushes it to ECR, and updates the ECS Task Definition.
+*   **`deploy-frontend.yml` (Frontend):** Triggers when files in `route-53-frontend` change. It runs `npm ci`, builds the Next.js app, syncs it to S3, and creates a CloudFront invalidation to clear the cache.
 
 ---
 
-## 🐛 The Boss Battle: The "Mixed Content" Block
+## 🐛 Failures & Fixes (The Struggles)
 
-This was the most challenging part of Phase 6. 
+This phase was a masterclass in debugging web routing, IAM permissions, and GitHub Actions.
 
-Our CloudFront website was secure, loading over **HTTPS**. However, our API (the ALB) was running on **HTTP**. 
-When the frontend tried to fetch venue data from `http://venuefinder-alb...`, the browser completely blocked the request. 
-*   **The Error:** `Mixed Content: The page was loaded over HTTPS, but requested an insecure resource...`
-*   **Why?** This is a modern browser security feature. Browsers don't allow secure sites to talk to insecure sites, because a hacker could intercept the HTTP traffic.
+### Failure 1: CloudFront 403 Access Denied (XML Error)
+**Symptom:** Visiting the CloudFront URL resulted in an ugly XML `AccessDenied` error.
+**Root Cause:** The S3 bucket policy granting CloudFront read access wasn't saved, or the Default Root Object wasn't set.
+**Fix:** We manually pasted the auto-generated OAC bucket policy into S3, and set the CloudFront Default Root Object to `index.html`.
 
-### 💡 The Solution: The CloudFront Reverse Proxy
-We couldn't buy an SSL certificate because we don't own a custom domain (SSL certificates in AWS require a domain). So, we used a clever Cloud Engineer trick: **We turned CloudFront into a middleman.**
+### Failure 2: SPA Routing Breaks on Refresh (403/404)
+**Symptom:** Clicking `/login` worked, but refreshing the page resulted in a 404.
+**Root Cause:** Next.js is a Single Page App. CloudFront was looking for a physical file named `login` in S3, which didn't exist.
+**Fix:** We configured CloudFront **Custom Error Responses**. We told it to intercept any `403` or `404` error from S3 and serve `/index.html` with a `200 OK` status.
 
-1.  **Added the ALB as a second Origin:** We told CloudFront about our backend ALB.
-2.  **Created an `/api/*` Behavior:** We told CloudFront: *"If the user requests a static file (like an image), get it from S3. But if the user requests anything starting with `/api/`, forward it to the ALB."*
-3.  **Set Caching to Disabled:** We made sure CloudFront didn't cache the API responses (because we want real-time venue data).
-4.  **Set Origin Request Policy to `AllViewer`:** This ensured that user headers, tokens, and query strings were passed to the backend.
-5.  **Rebuilt the Frontend:** We rebuilt the frontend using `NEXT_PUBLIC_API_URL="https://d46vswlv62ic2.cloudfront.net"`. Now, the frontend talks securely over HTTPS to CloudFront, and CloudFront talks to the ALB.
+### Failure 3: The CloudFront "Ghost S3" Routing
+**Symptom:** We created the `/api/*` behavior, but API calls were still being served the `index.html` file.
+**Root Cause:** When editing the behavior, the Origin dropdown was accidentally left pointing to the S3 bucket instead of the newly created ALB Origin.
+**Fix:** Edited the `/api/*` behavior and explicitly selected the ALB origin from the dropdown.
+
+### Failure 4: CI/CD Frontend - `npm ci` Fails
+**Symptom:** The GitHub Actions frontend pipeline failed on `npm ci` with a "lockfile" error.
+**Root Cause:** The `package.json` was updated recently, but the `package-lock.json` was out of sync.
+**Fix:** Ran `npm install` locally, committed the updated `package-lock.json`, and pushed.
+
+### Failure 5: CI/CD Backend - "Unable to describe task definition"
+**Symptom:** The backend deployment pipeline failed during the AWS CLI step.
+**Root Cause:** The GitHub Secret `ECS_TASK_DEFINITION` was set to `venuefinder-backend-v2`, but the actual name in AWS was just `venuefinder-backend`.
+**Fix:** Updated the GitHub Secret to match the exact family name in the ECS console.
+
+### Failure 6: CI/CD Frontend - "s3:ListBucket" Access Denied
+**Symptom:** The `aws s3 sync` command failed because the IAM user lacked permission.
+**Root Cause:** The `AmazonS3FullAccess` policy wasn't attached correctly to the `github-actions-deployer` user.
+**Fix:** Created a strict, inline IAM policy granting exactly `s3:ListBucket` on the bucket, and `s3:PutObject`/`s3:DeleteObject` on the bucket contents.
 
 ---
 
-## 🕵️‍♂️ The Debugging Detective Work
+## 🤔 Key Decisions (ADRs)
 
-Getting the proxy to work felt like solving a mystery. Here are the hurdles we faced:
-
-*   **The Phantom S3 Routing:** After creating the `/api/*` behavior, the API calls were *still* hitting S3. We discovered that CloudFront takes 5–15 minutes to "Deploy" changes globally. We had to wait for the `Deployed` status before testing.
-*   **The Missing ALB Origin:** The `/api/*` behavior dropdown only showed S3. We realized the ALB origin was never actually saved. We had to go back and manually add the ALB DNS name to the Origins list.
-*   **The Cached Error:** Even after fixing the behavior, CloudFront kept serving the cached HTML error page. We had to create an **Invalidation** for `/*` to force CloudFront to drop its old cache and look at the new routing rules.
-*   **The Health Check Illusion:** When we tested `/api/health`, we saw the frontend homepage instead of JSON. Why? Because the Express backend doesn't have an `/api/health` route (only `/health`). It returned a 404, and CloudFront's Custom Error Page masked it by serving `index.html`. The routing was actually working perfectly!
+| Decision | Alternatives Considered | Why This Way | Tradeoff Accepted |
+| :--- | :--- | :--- | :--- |
+| **CloudFront Reverse Proxy** | Buy a custom domain & SSL cert for ALB | Buying a domain costs money. A reverse proxy solves the Mixed Content block for free using native CloudFront routing. | Slightly more complex CloudFront configuration (Behaviors & Origin Policies). |
+| **Commit Hash Image Tags** | Using `:latest` for Docker images | The `:latest` tag makes ECS rollbacks impossible because it always pulls the newest (potentially broken) code. | Slightly longer URLs in the ECS console. |
+| **Path-based CI Triggers** | Running both pipelines on every push | If you change a README, you don't want to redeploy your entire backend. Using `paths` in GitHub Actions saves build minutes. | Requires carefully managing folder structures. |
 
 ---
 
 ## ✅ Verification & Evidence
 
-- [x] **Frontend Loaded:** Navigating to `https://d46vswlv62ic2.cloudfront.net` loads the Next.js application over a secure connection.
-- [x] **Venue Data Loaded:** The frontend successfully fetches and renders venue data from the backend API.
-- [x] **No Mixed Content Errors:** The browser console is clean.
+- [x] **Frontend Hosted:** Site loads securely at `https://d46vswlv62ic2.cloudfront.net`.
+- [x] **API Proxy Works:** The frontend successfully fetches venue data from the backend with zero browser console errors.
+- [x] **Backend CI/CD:** Pushing a change to `route-53-backend` triggered a successful GitHub Actions run, updating the ECS Task.
+- [x] **Frontend CI/CD:** Pushing a change to `route-53-frontend` triggered a successful build, S3 sync, and CloudFront invalidation.
 
-![S3 Frontend Upload](../screenshots/42-success-s3-frontend-uploaded.png)
-![Frontend Static Build Output](../screenshots/42-success-frontend-build-output.png)
-![S3 403 Forbidden Before Default Root Object](../screenshots/42a-failure-s3-403-forbidden.png)
-![CloudFront API Routing Debug](../screenshots/cloudfront-api-fali.png)
+*📸 [Screenshot: 45-success-frontend-working.png]*
+*📸 [Screenshot: 51-success-cicd-backend-deployed.png]*
+*📸 [Screenshot: 52-success-cicd-frontend-deployed.png]*
 
 ---
 
 ## 🎓 What I Learned
-
-1.  **HTTPS vs. HTTP:** Browsers are incredibly strict about Mixed Content. If your frontend is HTTPS, your backend *must* be HTTPS or proxied through an HTTPS frontdoor.
-2.  **CloudFront is Powerful:** CloudFront isn't just for caching static images. By using Origins and Behaviors, it can act as a secure Reverse Proxy to route traffic to multiple different backends.
-3.  **SPA Routing is a Global Problem:** Because Single Page Apps don't have physical files for every route (`/login`, `/dashboard`), you *must* configure your web server to route all 404 errors back to `index.html`.
-4.  **The Invalidation Button:** CloudFront caching is aggressive. Whenever you change a behavior or upload a new S3 file, you **must** create an Invalidation to see the changes.
-
+1.  **Modern Browser Security:** Browsers will absolutely block your app if you mix HTTP and HTTPS. CloudFront Reverse Proxying is a powerful, free way to secure traffic without buying custom domains.
+2.  **SPA Architecture:** Static site hosts (like S3) don't understand client-side routing. You *must* configure error fallbacks to `index.html`.
+3.  **CI/CD IAM Permissions:** Automated pipelines require strict IAM roles. Following the "Principle of Least Privilege" by writing inline policies is much safer than granting Admin access to a pipeline.
+4.  **GitHub Actions Path Filtering:** By using `paths` in the workflow YAML, we created a highly efficient monorepo deployment strategy where backend and frontend deploy independently.
