@@ -23,7 +23,9 @@ export async function checkSlotAvailability(
     query._id = { $ne: new mongoose.Types.ObjectId(String(excludeBookingId)) };
   }
 
-  const conflict = (await BookingModel.findOne(query).lean()) as IBooking | null;
+  const conflict = (await BookingModel.findOne(
+    query,
+  ).lean()) as IBooking | null;
   return {
     available: !conflict,
     conflict: conflict || undefined,
