@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { venuesApi } from '../api/venues';
 import { Venue } from '../api/types';
 import { dollarsToCents } from '../api/client';
@@ -31,6 +31,7 @@ const QUICK_CITIES = [
 ];
 
 type ViewMode = 'bento' | 'split' | 'specs';
+type SortMode = 'featured' | 'price-asc' | 'price-desc' | 'capacity-desc';
 
 export default function HomePage() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -38,6 +39,10 @@ export default function HomePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('bento');
+  const [sortBy, setSortBy] = useState<SortMode>('featured');
+  const [savedOnly, setSavedOnly] = useState<boolean>(false);
+  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [apiLatencyMs, setApiLatencyMs] = useState<number | null>(null);
 
   // Filter states
   const [city, setCity] = useState<string>('');
@@ -68,6 +73,7 @@ export default function HomePage() {
           endDateIso = `${date}T${eH}:00:00.000Z`;
         }
 
+        const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now();
         const res = await venuesApi.list({
           city: city.trim() || undefined,
           startDate: startDateIso,
@@ -81,6 +87,8 @@ export default function HomePage() {
           page: targetPage,
           limit,
         });
+        const t1 = typeof performance !== 'undefined' ? performance.now() : Date.now();
+        setApiLatencyMs(Math.max(1, Math.round(t1 - t0)));
 
         setVenues(res.data || []);
         setTotal(res.total || 0);
@@ -117,6 +125,36 @@ export default function HomePage() {
     fetchVenues(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  useEffect(() => {
+    const syncSaved = () => {
+      try {
+        const raw = localStorage.getItem('vf_saved_venues');
+        setSavedIds(raw ? JSON.parse(raw) : []);
+      } catch {
+        setSavedIds([]);
+      }
+    };
+    syncSaved();
+    window.addEventListener('vf-saved-change', syncSaved);
+    return () => window.removeEventListener('vf-saved-change', syncSaved);
+  }, []);
+
+  const displayedVenues = useMemo(() => {
+    const base = savedOnly
+      ? venues.filter((v) => savedIds.includes(v._id))
+      : venues;
+    if (sortBy === 'price-asc') {
+      return [...base].sort((a, b) => a.pricePerHour - b.pricePerHour);
+    }
+    if (sortBy === 'price-desc') {
+      return [...base].sort((a, b) => b.pricePerHour - a.pricePerHour);
+    }
+    if (sortBy === 'capacity-desc') {
+      return [...base].sort((a, b) => b.capacity - a.capacity);
+    }
+    return base;
+  }, [venues, savedOnly, savedIds, sortBy]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,34 +194,65 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       {/* Editorial Luxury Hero Section */}
-      <section className="relative border-b border-white/[0.06] bg-[#0c0c0e] py-16 sm:py-24">
-        {/* Subtle Ambient Light Source from Top-Left */}
+      <section className="relative border-b border-white/[0.06] bg-[#0c0c0e] py-16 sm:py-24 overflow-hidden">
+        {/* Architectural Blueprint Grid + Subtle Ambient Gold Glow */}
+        <div className="absolute inset-0 bg-blueprint-grid pointer-events-none" />
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-60"
           style={{
             background:
-              'radial-gradient(circle 800px at 15% -10%, rgba(217, 174, 84, 0.08) 0%, transparent 80%)',
+              'radial-gradient(circle 800px at 15% -10%, rgba(217, 174, 84, 0.11) 0%, transparent 75%), radial-gradient(circle 600px at 88% 20%, rgba(217, 174, 84, 0.05) 0%, transparent 70%)',
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative">
-          <div className="max-w-3xl space-y-4">
-            {/* Pill with metallic rim light */}
-            <div className="badge-floating inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#161619] text-[#D9AE54]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D9AE54] animate-pulse" />
-              <span className="tracking-wide">Premier Architectural & Summit Venues Worldwide</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative animate-fade-up">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div className="max-w-3xl space-y-4">
+              {/* Pill with metallic rim light */}
+              <div className="badge-floating inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#161619]/90 text-[#D9AE54] backdrop-blur-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D9AE54] animate-pulse" />
+                <span className="tracking-wide">Premier Architectural & Summit Venues Worldwide</span>
+              </div>
+
+              {/* High-contrast Display Serif Heading */}
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold text-zinc-100 tracking-tight leading-[1.06]">
+                Reserve <span className="text-gold-gradient">extraordinary spaces</span> for landmark events.
+              </h1>
+
+              {/* Constrained line-length body text */}
+              <p className="text-zinc-400 text-base sm:text-lg max-w-[58ch] font-normal leading-relaxed">
+                Curated lofts, waterfront pavilions, auditoriums, and private estates.
+                Real-time server-side availability verification with transparent integer pricing.
+              </p>
             </div>
 
-            {/* High-contrast Display Serif Heading */}
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold text-zinc-100 tracking-tight leading-[1.08]">
-              Reserve extraordinary spaces for landmark events.
-            </h1>
-
-            {/* Constrained line-length body text */}
-            <p className="text-zinc-400 text-base sm:text-lg max-w-[58ch] font-normal leading-relaxed">
-              Curated lofts, waterfront pavilions, auditoriums, and private estates.
-              Real-time server-side availability verification with transparent integer pricing.
-            </p>
+            {/* Live Multi-Region AWS Telemetry Card */}
+            <div className="glass-luxury rounded-2xl p-4 sm:p-5 lg:w-72 shrink-0 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                  Global Edge Telemetry
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  LIVE
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2.5 text-xs">
+                <div className="p-2.5 rounded-xl bg-[#09090b]/80 border border-white/[0.04]">
+                  <p className="text-[10px] text-zinc-500 font-mono">API RTT</p>
+                  <p className="font-mono font-bold text-[#D9AE54] mt-0.5">
+                    {apiLatencyMs !== null ? `${apiLatencyMs} ms` : '—'}
+                  </p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#09090b]/80 border border-white/[0.04]">
+                  <p className="text-[10px] text-zinc-500 font-mono">ROUTING</p>
+                  <p className="font-mono font-bold text-zinc-200 mt-0.5">Route 53</p>
+                </div>
+              </div>
+              <p className="text-[10px] font-mono text-zinc-500 leading-relaxed">
+                CloudFront HTTPS → ALB Proxy → ECS Fargate (<span className="text-zinc-300">us-east-1</span> / <span className="text-zinc-300">eu-west-1</span>)
+              </p>
+            </div>
           </div>
 
           {/* Volumetric Filter Suite */}
@@ -374,12 +443,38 @@ export default function HomePage() {
               {city ? `Architectural Spaces in ${city}` : 'Global Architectural Venue Collection'}
             </h2>
             <p className="text-xs text-zinc-500 mt-1 font-mono uppercase tracking-wider">
-              {venues.length} Spaces Cataloged • Multi-Region Availability
+              {displayedVenues.length} Spaces Cataloged • Multi-Region Availability
             </p>
           </div>
 
-          {/* Perspective View Switcher */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#111113] border border-white/[0.08] self-start md:self-auto shadow-inner">
+          {/* Controls: Saved Toggle + Sort + Perspective View Switcher */}
+          <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+            <button
+              type="button"
+              onClick={() => setSavedOnly((v) => !v)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold border transition-all cursor-pointer ${
+                savedOnly
+                  ? 'bg-[#D9AE54]/20 text-[#D9AE54] border-[#D9AE54]/50'
+                  : 'bg-[#111113] text-zinc-400 border-white/[0.08] hover:text-zinc-200'
+              }`}
+            >
+              <span>{savedOnly ? '♥' : '♡'}</span>
+              <span>Saved ({savedIds.length})</span>
+            </button>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortMode)}
+              aria-label="Sort venues"
+              className="px-3 py-2 rounded-2xl text-xs font-semibold bg-[#111113] text-zinc-200 border border-white/[0.08] focus:outline-none focus:border-[#D9AE54] cursor-pointer"
+            >
+              <option value="featured">Sort: Featured</option>
+              <option value="price-asc">Price: Low → High</option>
+              <option value="price-desc">Price: High → Low</option>
+              <option value="capacity-desc">Capacity: Largest</option>
+            </select>
+
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#111113] border border-white/[0.08] shadow-inner">
             <button
               type="button"
               onClick={() => setViewMode('bento')}
@@ -416,6 +511,7 @@ export default function HomePage() {
               <span>📐 Specifications Matrix</span>
             </button>
           </div>
+          </div>
         </div>
 
         {loading ? (
@@ -432,18 +528,22 @@ export default function HomePage() {
               Retry Connection
             </button>
           </div>
-        ) : venues.length === 0 ? (
+        ) : displayedVenues.length === 0 ? (
           <div className="surface-resting rounded-3xl p-12 text-center space-y-3">
-            <p className="text-base font-bold text-zinc-200">No venues match your current filters</p>
+            <p className="text-base font-bold text-zinc-200">
+              {savedOnly ? 'No saved venues in this view' : 'No venues match your current filters'}
+            </p>
             <p className="text-xs text-zinc-500 max-w-md mx-auto">
-              Try adjusting your capacity criteria, date slot, or explore all cities.
+              {savedOnly
+                ? 'Tap the heart icon on any venue card to shortlist spaces for your event.'
+                : 'Try adjusting your capacity criteria, date slot, or explore all cities.'}
             </p>
             <button
               type="button"
-              onClick={handleResetFilters}
+              onClick={savedOnly ? () => setSavedOnly(false) : handleResetFilters}
               className="btn-volumetric-gold px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer"
             >
-              Reset Filters
+              {savedOnly ? 'Show All Venues' : 'Reset Filters'}
             </button>
           </div>
         ) : (
@@ -454,7 +554,7 @@ export default function HomePage() {
                ───────────────────────────────────────────────────────────────── */}
             {viewMode === 'bento' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                {venues.map((venue, idx) => (
+                {displayedVenues.map((venue, idx) => (
                   <VenueCard
                     key={venue._id}
                     venue={venue}
@@ -473,7 +573,7 @@ export default function HomePage() {
             {viewMode === 'split' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 <div className="lg:col-span-6 space-y-3.5">
-                  {venues.map((venue) => (
+                  {displayedVenues.map((venue) => (
                     <VenueCard
                       key={venue._id}
                       venue={venue}
@@ -486,7 +586,7 @@ export default function HomePage() {
 
                 <div className="lg:col-span-6 lg:sticky lg:top-24">
                   <VenueMap
-                    venues={venues}
+                    venues={displayedVenues}
                     selectedVenue={selectedVenue}
                     onSelectVenue={setSelectedVenue}
                   />
@@ -515,7 +615,7 @@ export default function HomePage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/[0.04]">
-                      {venues.map((v) => (
+                      {displayedVenues.map((v) => (
                         <tr
                           key={v._id}
                           className="hover:bg-white/[0.02] transition-colors cursor-pointer"

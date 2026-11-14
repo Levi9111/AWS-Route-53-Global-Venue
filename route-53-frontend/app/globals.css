@@ -117,6 +117,46 @@
   color: #0b0b0c;
 }
 
+/* ── Architectural Blueprint Grid & Luxury Surface Utilities ────────────── */
+.bg-blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgba(217, 174, 84, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(217, 174, 84, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 15%, #000 35%, transparent 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #f3d796 0%, #d9ae54 45%, #b88c32 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass-luxury {
+  background: rgba(17, 17, 19, 0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);

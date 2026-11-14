@@ -77,19 +77,34 @@ export function Navbar() {
           </nav>
         </div>
 
-        {/* Right side auth controls */}
+        {/* Right side auth controls + Edge Telemetry */}
         <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-[#121215] border border-white/[0.06] text-[10px] font-mono text-zinc-400">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            <span className="text-zinc-300 font-semibold">Edge HTTPS</span>
+            <span className="text-zinc-600">•</span>
+            <span>US-East / EU-West</span>
+          </div>
+
           {loading ? (
             <div className="h-8 w-28 rounded-full bg-zinc-800/70 animate-pulse" />
           ) : user ? (
             <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-xs font-semibold text-zinc-200 leading-tight">
-                  {user.name}
-                </p>
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#D9AE54]">
-                  {user.role}
-                </span>
+              <div className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full bg-[#141417] border border-white/[0.07]">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#e3ba60] to-[#b88c32] text-[#0b0b0c] font-bold text-xs flex items-center justify-center shadow-xs">
+                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-semibold text-zinc-200 leading-tight">
+                    {user.name}
+                  </p>
+                  <span className="text-[9px] uppercase font-mono tracking-widest text-[#D9AE54] block leading-none mt-0.5">
+                    {user.role}
+                  </span>
+                </div>
               </div>
               <button
                 type="button"

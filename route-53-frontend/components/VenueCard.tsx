@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Venue } from '../api/types';
 import { formatCents } from '../api/client';
@@ -69,8 +69,38 @@ export function VenueCard({
   variant = 'standard',
 }: VenueCardProps) {
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [saved, setSaved] = useState(false);
   const photos = venue.photos && venue.photos.length > 0 ? venue.photos : [FALLBACK_PHOTO];
   const pedigree = getArchitecturalPedigree(venue);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('vf_saved_venues');
+      if (raw) {
+        const list: string[] = JSON.parse(raw);
+        setSaved(list.includes(venue._id));
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [venue._id]);
+
+  const toggleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const raw = localStorage.getItem('vf_saved_venues');
+      const list: string[] = raw ? JSON.parse(raw) : [];
+      const next = list.includes(venue._id)
+        ? list.filter((id) => id !== venue._id)
+        : [...list, venue._id];
+      localStorage.setItem('vf_saved_venues', JSON.stringify(next));
+      setSaved(next.includes(venue._id));
+      window.dispatchEvent(new Event('vf-saved-change'));
+    } catch {
+      // ignore storage errors
+    }
+  };
 
   const nextPhoto = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -97,11 +127,27 @@ export function VenueCard({
             : 'surface-resting hover:surface-elevated hover:-translate-y-1'
         }`}
       >
-        {/* Architectural Blueprint Stamp Overlay */}
-        <div className="absolute top-5 right-5 z-20 hidden sm:flex items-center gap-2 bg-[#09090b]/80 border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest text-[#D9AE54] backdrop-blur-md">
-          <span>ARCHITECTURAL SELECTION</span>
-          <span>•</span>
-          <span>{pedigree.region}</span>
+        {/* Architectural Blueprint Stamp + Save Button */}
+        <div className="absolute top-5 right-5 z-20 flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2 bg-[#09090b]/80 border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest text-[#D9AE54] backdrop-blur-md">
+            <span>ARCHITECTURAL SELECTION</span>
+            <span>•</span>
+            <span>{pedigree.region}</span>
+          </div>
+          <button
+            type="button"
+            onClick={toggleSave}
+            aria-label={saved ? 'Remove from saved venues' : 'Save venue'}
+            className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer ${
+              saved
+                ? 'bg-[#D9AE54] text-[#0b0b0c] border-[#D9AE54] shadow-md scale-105'
+                : 'bg-[#09090b]/80 text-zinc-300 border-white/15 hover:text-[#D9AE54] hover:border-[#D9AE54]/50'
+            }`}
+          >
+            <svg className="w-4 h-4" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
         </div>
 
         {/* Media Plane with Hover Slide Carousel */}
@@ -314,9 +360,25 @@ export function VenueCard({
           }}
         />
 
+        {/* Save / Bookmark Heart */}
+        <button
+          type="button"
+          onClick={toggleSave}
+          aria-label={saved ? 'Remove from saved venues' : 'Save venue'}
+          className={`absolute top-3 right-3 z-20 w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer ${
+            saved
+              ? 'bg-[#D9AE54] text-[#0b0b0c] border-[#D9AE54] shadow-md scale-105'
+              : 'bg-black/60 text-zinc-200 border-white/15 hover:text-[#D9AE54] hover:border-[#D9AE54]/50'
+          }`}
+        >
+          <svg className="w-3.5 h-3.5" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
+
         {/* Floating Carousel Arrows and Dash Controls */}
         {photos.length > 1 && (
-          <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
+          <div className="absolute top-3 left-3 right-12 flex items-center justify-between z-20">
             <div className="flex gap-1">
               {photos.map((_, i) => (
                 <span
