@@ -5,6 +5,8 @@ import logger from './app/utils/logger';
 import { connectDB } from './app/utils/connectDB';
 import { seedDatabaseIfNeeded } from './app/utils/seed';
 
+
+// declaring a server
 let server: Server;
 
 async function bootstrap() {
@@ -13,7 +15,8 @@ async function bootstrap() {
     await seedDatabaseIfNeeded();
 
     server = app.listen(config.port, () => {
-      logger.info(`Server running on http://localhost:${config.port}`);
+      // logger.info(`Server running on http://localhost:${config.port}`);
+      logger.info(`Server running on Port ${config.port}`);
     });
 
     // Ensure Keep-Alive timeouts for reverse proxies (ALB/Nginx/Cloudflare)
