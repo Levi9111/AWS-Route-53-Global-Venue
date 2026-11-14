@@ -61,6 +61,7 @@ flowchart LR
 | **Phase 4 (Part 2)** | [phase-04-part2-route53.md](docs/case-studies/phase-04-part2-route53.md) | **Route 53 Private Hosted Zone, Latency-Based Routing, Independent Health Checks, & CLI Fixes** |
 | **Phase 5** | [phase-05-observability.md](docs/case-studies/phase-05-observability.md) | CloudWatch Alarms (`5XX`), Container Insights Dashboard, SNS Alerting, & Namespace RCA |
 | **Phase 6 (Part 1)** | [phase-06-frontend-deployment.md](docs/case-studies/phase-06-frontend-deployment.md) | Static S3 + CloudFront OAC, SPA Routing, & CloudFront HTTPS Reverse Proxy (`/api/*` → ALB) |
+| **Phase 7** | [phase-07-hardening-and-scaling.md](docs/case-studies/phase-07-hardening-and-scaling.md) | AWS Secrets Manager Runtime Injection, ECS CPU Target-Tracking Auto-Scaling, & ECR OCI Scan RCA |
 | **ADRs** | [docs/decisions/README.md](docs/decisions/README.md) | Architecture Decision Records (Route 53, EBS persistence, ECR naming, Private DNS) |
 
 ---
