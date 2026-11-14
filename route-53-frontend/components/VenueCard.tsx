@@ -206,16 +206,16 @@ export function VenueCard({
         {/* Narrative & Specification Column */}
         <div className="md:w-5/12 p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 bg-[#09090b]/80 border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest text-[#D9AE54]">
-              <span>ARCHITECTURAL SELECTION</span>
-              <span>•</span>
+            <div className="inline-flex items-center gap-2 bg-[#09090b]/80 border border-[#D9AE54]/25 px-3 py-1 rounded-full text-[10px] font-mono tracking-wider text-[#D9AE54] whitespace-nowrap w-fit">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D9AE54]" />
+              <span>FEATURED</span>
+              <span className="text-zinc-600">•</span>
               <span>{pedigree.region}</span>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
-              <span>📍 {venue.city}, {venue.country}</span>
-              <span>•</span>
-              <span>Capacity: {venue.capacity}</span>
+            <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+              <span className="truncate">📍 {venue.city}, {venue.country}</span>
+              <span className="shrink-0 text-zinc-300">👥 {venue.capacity} guests</span>
             </div>
 
             <Link

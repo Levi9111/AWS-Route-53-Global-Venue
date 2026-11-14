@@ -5,7 +5,6 @@ import logger from './app/utils/logger';
 import { connectDB } from './app/utils/connectDB';
 import { seedDatabaseIfNeeded } from './app/utils/seed';
 
-
 // declaring a server
 let server: Server;
 
