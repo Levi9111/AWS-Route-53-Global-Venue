@@ -127,18 +127,14 @@ export function VenueCard({
             : 'surface-resting hover:surface-elevated hover:-translate-y-1'
         }`}
       >
-        {/* Architectural Blueprint Stamp + Save Button */}
-        <div className="absolute top-5 right-5 z-20 flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-2 bg-[#09090b]/80 border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest text-[#D9AE54] backdrop-blur-md">
-            <span>ARCHITECTURAL SELECTION</span>
-            <span>•</span>
-            <span>{pedigree.region}</span>
-          </div>
+        {/* Media Plane with Hover Slide Carousel */}
+        <div className="relative md:w-7/12 aspect-[16/11] md:aspect-auto md:min-h-[380px] rounded-2xl overflow-hidden bg-[#08080a] shadow-inner ring-1 ring-white/5 shrink-0">
+          {/* Save / Bookmark Heart */}
           <button
             type="button"
             onClick={toggleSave}
             aria-label={saved ? 'Remove from saved venues' : 'Save venue'}
-            className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer ${
+            className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border transition-all cursor-pointer ${
               saved
                 ? 'bg-[#D9AE54] text-[#0b0b0c] border-[#D9AE54] shadow-md scale-105'
                 : 'bg-[#09090b]/80 text-zinc-300 border-white/15 hover:text-[#D9AE54] hover:border-[#D9AE54]/50'
@@ -148,10 +144,6 @@ export function VenueCard({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>
-        </div>
-
-        {/* Media Plane with Hover Slide Carousel */}
-        <div className="relative md:w-7/12 aspect-[16/11] md:aspect-auto md:min-h-[380px] rounded-2xl overflow-hidden bg-[#08080a] shadow-inner ring-1 ring-white/5 shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={photos[photoIndex]}
@@ -169,7 +161,7 @@ export function VenueCard({
 
           {/* Micro Carousel Indicators */}
           {photos.length > 1 && (
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-20">
+            <div className="absolute top-3 left-3 right-14 flex items-center justify-between z-20">
               <div className="flex gap-1">
                 {photos.map((_, i) => (
                   <span
@@ -214,6 +206,12 @@ export function VenueCard({
         {/* Narrative & Specification Column */}
         <div className="md:w-5/12 p-5 sm:p-6 flex flex-col justify-between space-y-5">
           <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 bg-[#09090b]/80 border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest text-[#D9AE54]">
+              <span>ARCHITECTURAL SELECTION</span>
+              <span>•</span>
+              <span>{pedigree.region}</span>
+            </div>
+
             <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
               <span>📍 {venue.city}, {venue.country}</span>
               <span>•</span>
