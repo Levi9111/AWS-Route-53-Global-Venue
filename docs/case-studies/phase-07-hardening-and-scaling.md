@@ -44,8 +44,8 @@ The application was fully functional and automated, but it lacked production-gra
 - [x] **Secrets Manager:** The active Task Definition shows no plaintext passwords in the Environment Variables tab, and successfully fetches them from Secrets Manager.
 - [x] **Auto-Scaling:** The ECS Service Auto Scaling tab shows the active policy targeting 70% CPU utilization.
 
-*📸 [Screenshot: 54-success-secrets-manager.png]*
-*📸 [Screenshot: 55-success-ecs-autoscaling.png]*
+![AWS Secrets Manager Configured](../screenshots/54-success-secrets-manager.png)
+![ECS Service CPU Auto-Scaling](../screenshots/55-success-ecs-autoscaling.png)
 
 ---
 

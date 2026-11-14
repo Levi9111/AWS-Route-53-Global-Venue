@@ -98,9 +98,13 @@ This phase was a masterclass in debugging web routing, IAM permissions, and GitH
 - [x] **Backend CI/CD:** Pushing a change to `route-53-backend` triggered a successful GitHub Actions run, updating the ECS Task.
 - [x] **Frontend CI/CD:** Pushing a change to `route-53-frontend` triggered a successful build, S3 sync, and CloudFront invalidation.
 
-*📸 [Screenshot: 45-success-frontend-working.png]*
-*📸 [Screenshot: 51-success-cicd-backend-deployed.png]*
-*📸 [Screenshot: 52-success-cicd-frontend-deployed.png]*
+![S3 Frontend Upload](../screenshots/42-success-s3-frontend-uploaded.png)
+![S3 403 Forbidden Before Default Root Object](../screenshots/42a-failure-s3-403-forbidden.png)
+![CloudFront API Reverse Proxy Debug](../screenshots/cloudfront-api-fali.png)
+![GitHub Actions IAM User](../screenshots/46-success-github-iam-user.png)
+![GitHub Secrets Configured](../screenshots/47-success-github-secrets.png)
+![GitHub Actions CI/CD Backend Deployed](../screenshots/51-success-cicd-backend-deployed.png)
+![GitHub Actions CI/CD Frontend Deployed](../screenshots/52-success-cicd-frontend-deployed.png)
 
 ---
 

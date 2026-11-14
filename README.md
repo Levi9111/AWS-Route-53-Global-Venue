@@ -1,6 +1,12 @@
 # Global VenueFinder — Multi-Region Event Space Marketplace on AWS
 
-> **Live Frontend (CloudFront HTTPS + S3 OAC + `/api/*` Reverse Proxy):** `https://d46vswlv62ic2.cloudfront.net`
+[![AWS Multi-Region](https://img.shields.io/badge/AWS-us--east--1%20%7C%20eu--west--1-FF9900?style=flat-square&logo=amazonaws&logoColor=white)](docs/case-studies/phase-04-part1-load-balancing.md)
+[![Amazon Route 53](https://img.shields.io/badge/Route%2053-Latency%20Routing-8C4FFF?style=flat-square&logo=amazonroute53&logoColor=white)](docs/case-studies/phase-04-part2-route53.md)
+[![CloudFront HTTPS](https://img.shields.io/badge/CloudFront-S3%20OAC%20%2B%20API%20Proxy-8C4FFF?style=flat-square&logo=amazoncloudfront&logoColor=white)](docs/case-studies/phase-06-frontend-deployment.md)
+[![GitHub Actions CI/CD](https://img.shields.io/badge/CI%2FCD-Multi--Region%20Matrix-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/deploy.yml)
+[![Secrets Manager & Auto-Scaling](https://img.shields.io/badge/Production-Secrets%20Manager%20%2B%20Auto--Scaling-DD344C?style=flat-square&logo=amazonaws&logoColor=white)](docs/case-studies/phase-07-hardening-and-scaling.md)
+
+> **Live Deployment (CloudFront HTTPS + S3 OAC + `/api/*` Reverse Proxy):** `https://d46vswlv62ic2.cloudfront.net`
 
 An "Airbnb for Event Spaces" full-stack monorepo engineered for stateless multi-region deployment on **AWS ECS Fargate (`us-east-1` & `eu-west-1`)** behind **Amazon Route 53** Latency-Based Routing, **Amazon CloudFront** (serving a private S3 static frontend and terminating HTTPS for `/api/*` via an ALB reverse proxy), **CloudWatch + SNS** observability, and a persistent MongoDB tier.
 
@@ -60,9 +66,18 @@ flowchart LR
 | **Phase 4 (Part 1)** | [phase-04-part1-load-balancing.md](docs/case-studies/phase-04-part1-load-balancing.md) | Dual-region ALBs (`us-east-1` & `eu-west-1`), Target Groups, & EU Fargate deployment |
 | **Phase 4 (Part 2)** | [phase-04-part2-route53.md](docs/case-studies/phase-04-part2-route53.md) | **Route 53 Private Hosted Zone, Latency-Based Routing, Independent Health Checks, & CLI Fixes** |
 | **Phase 5** | [phase-05-observability.md](docs/case-studies/phase-05-observability.md) | CloudWatch Alarms (`5XX`), Container Insights Dashboard, SNS Alerting, & Namespace RCA |
-| **Phase 6 (Part 1)** | [phase-06-frontend-deployment.md](docs/case-studies/phase-06-frontend-deployment.md) | Static S3 + CloudFront OAC, SPA Routing, & CloudFront HTTPS Reverse Proxy (`/api/*` → ALB) |
+| **Phase 6** | [phase-06-frontend-deployment.md](docs/case-studies/phase-06-frontend-deployment.md) | Static S3 + CloudFront OAC, SPA Routing, HTTPS Reverse Proxy (`/api/*` → ALB), & CI/CD |
 | **Phase 7** | [phase-07-hardening-and-scaling.md](docs/case-studies/phase-07-hardening-and-scaling.md) | AWS Secrets Manager Runtime Injection, ECS CPU Target-Tracking Auto-Scaling, & ECR OCI Scan RCA |
 | **ADRs** | [docs/decisions/README.md](docs/decisions/README.md) | Architecture Decision Records (Route 53, EBS persistence, ECR naming, Private DNS) |
+
+---
+
+## ⚙️ Automated CI/CD & Production Hardening
+
+- **CI Verification ([ci.yml](.github/workflows/ci.yml)):** Runs `cem check` (`tsc` + `eslint` + `prettier`) and `npm run build` on the backend, plus `tsc --noEmit` and static `next build` (`output: 'export'`) on the frontend.
+- **Multi-Region Backend CD ([deploy.yml](.github/workflows/deploy.yml)):** Path-filtered (`route-53-backend/**`) GitHub Actions matrix deploying Docker images tagged with `${{ github.sha }}` to **both `us-east-1` (`venuefinder-cluster-v2`) and `eu-west-1` (`venuefinder-cluster-eu`)** in parallel.
+- **Frontend CD ([deploy-frontend.yml](.github/workflows/deploy-frontend.yml)):** Path-filtered (`route-53-frontend/**`) Next.js static export synced to the private S3 bucket followed by an automatic CloudFront `/*` cache invalidation.
+- **Hardening & Auto-Scaling ([Phase 7](docs/case-studies/phase-07-hardening-and-scaling.md)):** Runtime secret injection via **AWS Secrets Manager** (`venuefinder/prod/backend-secrets`) and **ECS Target-Tracking Auto-Scaling** (1–3 tasks targeting 70% CPU utilization).
 
 ---
 
@@ -70,12 +85,13 @@ flowchart LR
 
 ```
 .
+├── .github/workflows/     # CI check, Multi-Region ECS Matrix CD, & S3/CloudFront Frontend CD
 ├── route-53-backend/      # Express + TypeScript + Mongoose + Zod (scaffolded via CEM CLI)
-├── route-53-frontend/     # Next.js (App Router) + TypeScript + Tailwind CSS + Zod
+├── route-53-frontend/     # Next.js (App Router, static export) + TypeScript + Tailwind CSS
 ├── docs/
-│   ├── case-studies/      # Detailed phase-by-phase cloud implementation & SRE post-mortems
+│   ├── case-studies/      # Complete 7-phase cloud implementation & SRE post-mortems
 │   ├── decisions/         # Architecture Decision Records (ADRs)
-│   └── screenshots/       # Verified AWS Console & CLI evidence across all phases
+│   └── screenshots/       # Verified AWS Console & CLI evidence across all 7 phases
 └── docker-compose.yml     # Local orchestration: frontend + backend + MongoDB with named volume
 ```
 
