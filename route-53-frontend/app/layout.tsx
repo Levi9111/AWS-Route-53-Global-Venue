@@ -3,6 +3,8 @@ import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 
+// Triggering frontend CI/CD.
+
 export const metadata: Metadata = {
   title: 'Global VenueFinder — Architectural Event Spaces',
   description:
