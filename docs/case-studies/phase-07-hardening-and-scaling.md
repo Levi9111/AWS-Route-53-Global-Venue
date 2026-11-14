@@ -53,3 +53,4 @@ The application was fully functional and automated, but it lacked production-gra
 1.  **Runtime Secret Injection:** Storing secrets in a Task Definition is a massive security anti-pattern. Secrets Manager prevents anyone with read-access to the ECS console from stealing database credentials.
 2.  **Cost-Aware Scaling:** Setting the Auto-Scaling minimum to 1 task ensures we aren't paying for idle compute, while the maximum of 3 ensures the app won't crash during a viral traffic spike.
 3.  **Docker Image Formats:** Learned the difference between Docker V2 and OCI image manifests, and how BuildKit changes the output format of images.
+
